@@ -1,4 +1,4 @@
-import { ems, fromSchema } from '../supabase';
+import { fromSchema } from '../supabase';
 import { SCHEMAS } from '@/config/constants';
 
 export class PracticeService {
@@ -6,9 +6,7 @@ export class PracticeService {
      * Get Practice Quotas for Academic Manager Dashboard
      */
     static async getPracticeQuotas(companyId: number) {
-        const { data, error } = await ems.supabase
-            .schema('ems')
-            .from('practice_quotas')
+        const { data, error } = await fromSchema(SCHEMAS.EMS, 'practice_quotas')
             .select('*')
             .eq('company_id', companyId);
 
@@ -22,9 +20,7 @@ export class PracticeService {
      */
     static async allocateModule(studentId: number, courseId: number, moduleType: 'GST' | 'TDS' | 'INCOME_TAX', companyId: number, allocatedBy: number) {
         // 1. Check if quota exists and has balance
-        const { data: quota, error: quotaError } = await ems.supabase
-            .schema('ems')
-            .from('practice_quotas')
+        const { data: quota, error: quotaError } = await fromSchema(SCHEMAS.EMS, 'practice_quotas')
             .select('*')
             .eq('company_id', companyId)
             .eq('module_type', moduleType)
@@ -39,9 +35,7 @@ export class PracticeService {
         }
 
         // 2. Check if already allocated
-        const { data: existing } = await ems.supabase
-            .schema('ems')
-            .from('student_practice_allocations')
+        const { data: existing } = await fromSchema(SCHEMAS.EMS, 'student_practice_allocations')
             .select('*')
             .eq('student_id', studentId)
             .eq('module_type', moduleType)
@@ -53,9 +47,7 @@ export class PracticeService {
         }
 
         // 3. Create allocation
-        const { data: allocation, error: allocError } = await ems.supabase
-            .schema('ems')
-            .from('student_practice_allocations')
+        const { data: allocation, error: allocError } = await fromSchema(SCHEMAS.EMS, 'student_practice_allocations')
             .insert({
                 company_id: companyId,
                 student_id: studentId,
@@ -71,9 +63,7 @@ export class PracticeService {
         if (allocError) throw allocError;
 
         // 4. Increment used licenses in quota
-        await ems.supabase
-            .schema('ems')
-            .from('practice_quotas')
+        await fromSchema(SCHEMAS.EMS, 'practice_quotas')
             .update({ used_licenses: quota.used_licenses + 1 })
             .eq('id', quota.id);
 
@@ -86,9 +76,7 @@ export class PracticeService {
      */
     static async saveGstEntry(allocationId: number, entryData: any) {
         // 1. Check limit
-        const { data: allocation, error: allocError } = await ems.supabase
-            .schema('ems')
-            .from('student_practice_allocations')
+        const { data: allocation, error: allocError } = await fromSchema(SCHEMAS.EMS, 'student_practice_allocations')
             .select('*')
             .eq('id', allocationId)
             .single();
@@ -100,9 +88,7 @@ export class PracticeService {
         }
 
         // 2. Save entry
-        const { data: entry, error: entryError } = await ems.supabase
-            .schema('ems')
-            .from('practice_gst_entries')
+        const { data: entry, error: entryError } = await fromSchema(SCHEMAS.EMS, 'practice_gst_entries')
             .insert({
                 allocation_id: allocationId,
                 ...entryData,
@@ -116,9 +102,7 @@ export class PracticeService {
         if (entryError) throw entryError;
 
         // 3. Increment used_count
-        await ems.supabase
-            .schema('ems')
-            .from('student_practice_allocations')
+        await fromSchema(SCHEMAS.EMS, 'student_practice_allocations')
             .update({ used_count: allocation.used_count + 1 })
             .eq('id', allocationId);
 
@@ -152,9 +136,7 @@ export class PracticeService {
      */
     static async saveTdsEntry(allocationId: number, entryData: any) {
         // Check limit
-        const { data: allocation } = await ems.supabase
-            .schema('ems')
-            .from('student_practice_allocations')
+        const { data: allocation } = await fromSchema(SCHEMAS.EMS, 'student_practice_allocations')
             .select('*')
             .eq('id', allocationId)
             .single();
@@ -167,9 +149,7 @@ export class PracticeService {
         const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
         const isValidPan = panRegex.test(entryData.deductee_pan || '');
 
-        const { data: entry, error } = await ems.supabase
-            .schema('ems')
-            .from('practice_tds_entries')
+        const { data: entry, error } = await fromSchema(SCHEMAS.EMS, 'practice_tds_entries')
             .insert({
                 allocation_id: allocationId,
                 ...entryData,
@@ -181,9 +161,7 @@ export class PracticeService {
 
         if (error) throw error;
 
-        await ems.supabase
-            .schema('ems')
-            .from('student_practice_allocations')
+        await fromSchema(SCHEMAS.EMS, 'student_practice_allocations')
             .update({ used_count: allocation.used_count + 1 })
             .eq('id', allocationId);
 
@@ -194,9 +172,7 @@ export class PracticeService {
      * Save Income Tax Return Simulation
      */
     static async saveItReturn(allocationId: number, entryData: any) {
-        const { data: allocation } = await ems.supabase
-            .schema('ems')
-            .from('student_practice_allocations')
+        const { data: allocation } = await fromSchema(SCHEMAS.EMS, 'student_practice_allocations')
             .select('*')
             .eq('id', allocationId)
             .single();
@@ -205,9 +181,7 @@ export class PracticeService {
             throw new Error('Usage limit reached.');
         }
 
-        const { data: entry, error } = await ems.supabase
-            .schema('ems')
-            .from('practice_it_returns')
+        const { data: entry, error } = await fromSchema(SCHEMAS.EMS, 'practice_it_returns')
             .insert({
                 allocation_id: allocationId,
                 ...entryData,
@@ -218,9 +192,7 @@ export class PracticeService {
 
         if (error) throw error;
 
-        await ems.supabase
-            .schema('ems')
-            .from('student_practice_allocations')
+        await fromSchema(SCHEMAS.EMS, 'student_practice_allocations')
             .update({ used_count: allocation.used_count + 1 })
             .eq('id', allocationId);
 
@@ -231,9 +203,7 @@ export class PracticeService {
      * Reset or Extend Usage Limit for a student
      */
     static async resetUsageLimit(allocationId: number, newLimit: number = 5) {
-        const { data, error } = await ems.supabase
-            .schema('ems')
-            .from('student_practice_allocations')
+        const { data, error } = await fromSchema(SCHEMAS.EMS, 'student_practice_allocations')
             .update({
                 used_count: 0,
                 usage_limit: newLimit,
@@ -251,9 +221,7 @@ export class PracticeService {
      * Get Student Allocation Status
      */
     static async getStudentStatus(studentId: number, companyId: number) {
-        const { data, error } = await ems.supabase
-            .schema('ems')
-            .from('student_practice_allocations')
+        const { data, error } = await fromSchema(SCHEMAS.EMS, 'student_practice_allocations')
             .select(`
                 *,
                 course:courses (

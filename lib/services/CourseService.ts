@@ -107,10 +107,8 @@ export class CourseService {
                 course_materials (*),
                 course_modules (
                     *,
-                    course_materials (*),
                     lessons (
-                        *,
-                        course_materials (*)
+                        *
                     )
                 )
             `)
