@@ -15,8 +15,12 @@ export async function GET(
         const userId = await getUserIdFromToken(req);
         if (!userId) return errorResponse(null, 'Unauthorized', 401);
 
-        const menuAccess = await requireMenuAccessAppRouter(req, 'ems.courses.edit');
-        if (menuAccess instanceof Response) return menuAccess;
+        // Students only need 'ems.courses' (view), editors need 'ems.courses.edit'
+        let menuAccess = await requireMenuAccessAppRouter(req, 'ems.courses.edit');
+        if (menuAccess instanceof Response) {
+            menuAccess = await requireMenuAccessAppRouter(req, 'ems.courses');
+            if (menuAccess instanceof Response) return menuAccess;
+        }
 
         const scope = await getUserTenantScope(userId);
         const courseId = parseInt(params.id);
