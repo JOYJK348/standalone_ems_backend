@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
                 longitude: body.longitude,
                 locationAccuracy: body.locationAccuracy || 10,
                 deviceInfo: body.deviceInfo || {},
-                ipAddress: req.headers.get('x-durkkas-client-ip') || '0.0.0.0',
+                ipAddress: req.headers.get('x-Agaran-client-ip') || '0.0.0.0',
                 userAgent: req.headers.get('user-agent') || ''
             },
             scope.companyId!

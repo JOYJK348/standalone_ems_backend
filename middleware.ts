@@ -32,7 +32,7 @@ export async function middleware(req: NextRequest) {
         const allowedHeaders = [
             'Authorization', 'Content-Type', 'X-CSRF-Token', 'X-Requested-With', 'Accept',
             'Accept-Version', 'Content-Length', 'Content-MD5', 'Date', 'X-Api-Version',
-            'Cache-Control', 'Pragma', 'Expires', 'x-durkkas-client-ip', 'x-device-fingerprint',
+            'Cache-Control', 'Pragma', 'Expires', 'x-Agaran-client-ip', 'x-device-fingerprint',
             'x-company-id', 'x-branch-id'
         ].join(', ');
 

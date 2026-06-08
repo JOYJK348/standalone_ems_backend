@@ -1,7 +1,7 @@
 /**
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  * SUBSCRIPTION-BASED FEATURE ACCESS CONTROL
- * Durkkas Innovations Private Limited
+ * Agaran Innovations Private Limited
  * Enterprise SaaS | Zero-Noise UI | Professional Grade
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  * 

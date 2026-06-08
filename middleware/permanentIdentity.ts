@@ -1,7 +1,7 @@
 /**
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  * PERMANENT IDENTITY & SUBSCRIPTION LIMIT ENFORCEMENT
- * Durkkas Innovations Private Limited
+ * Agaran Innovations Private Limited
  * Enterprise SaaS | Permanent IDs | Zero ID Reuse
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  * 

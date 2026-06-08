@@ -19,7 +19,7 @@ export const runCors = (req: NextApiRequest, res: NextApiResponse) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
     res.setHeader(
         'Access-Control-Allow-Headers',
-        'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization, x-durkkas-client-ip, x-device-fingerprint, x-company-id, x-branch-id, Expires, Cache-Control, Pragma'
+        'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization, x-Agaran-client-ip, x-device-fingerprint, x-company-id, x-branch-id, Expires, Cache-Control, Pragma'
     );
     res.setHeader('Access-Control-Allow-Credentials', 'true');
 

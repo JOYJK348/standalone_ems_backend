@@ -1,7 +1,7 @@
 {
-    "name": "durkkas-ems-backend",
+    "name": "Agaran-ems-backend",
     "version": "1.0.0",
-    "description": "Multi-tenant backend for Durkkas EMS standalone",
+    "description": "Multi-tenant backend for Agaran EMS standalone",
     "private": true,
     "scripts": {
         "dev": "node -e \"const ip = Object.values(require('os').networkInterfaces()).flat().find(i => i.family === 'IPv4' && !i.internal)?.address; console.log('\\x1b[35m%s\\x1b[0m', '>>> API Node Access: http://' + ip + ':3000');\" && next dev -p 3000 -H 0.0.0.0",

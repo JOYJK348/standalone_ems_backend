@@ -15,7 +15,7 @@ export class AuditService {
         try {
             // Priority list of headers that commonly contain the client IP
             const potentialHeaders = [
-                'x-durkkas-client-ip', // 🚀 Custom Frontend Detected IP (Highest Priority)
+                'x-Agaran-client-ip', // 🚀 Custom Frontend Detected IP (Highest Priority)
                 'cf-connecting-ip',    // Cloudflare
                 'x-forwarded-for',      // Common proxy
                 'x-real-ip',            // Nginx
@@ -98,7 +98,7 @@ export class AuditService {
             try {
                 const headerStore = headers();
                 if (!ipAddress) {
-                    ipAddress = headerStore.get('x-durkkas-client-ip') ||
+                    ipAddress = headerStore.get('x-Agaran-client-ip') ||
                         headerStore.get('cf-connecting-ip') ||
                         headerStore.get('x-forwarded-for')?.split(',')[0].trim() ||
                         headerStore.get('x-real-ip') ||
@@ -189,7 +189,7 @@ export class AuditService {
                 if (primaryRole) {
                     const orgContext = primaryRole.level === 5
                         ? 'Platform'
-                        : (primaryRole.branch_name || primaryRole.company_name || 'Durkkas');
+                        : (primaryRole.branch_name || primaryRole.company_name || 'Agaran');
                     roleContext = ` (${primaryRole.display_name || primaryRole.name} – ${orgContext})`;
                 }
             }

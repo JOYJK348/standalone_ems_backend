@@ -1,7 +1,7 @@
 /**
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  * SOFT DELETE MIDDLEWARE
- * Durkkas Innovations Private Limited
+ * Agaran Innovations Private Limited
  * Enterprise-Grade Data Protection & Audit Trail
  * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
  * 

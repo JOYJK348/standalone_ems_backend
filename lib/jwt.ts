@@ -47,8 +47,8 @@ export function generateAccessToken(
 
     const options: jwt.SignOptions = {
         expiresIn: (expiresIn || JWT_EXPIRES_IN) as jwt.SignOptions['expiresIn'],
-        issuer: 'durkkas-erp',
-        audience: 'durkkas-api',
+        issuer: 'Agaran-erp',
+        audience: 'Agaran-api',
     };
 
     return jwt.sign(payload, JWT_SECRET!, options);
@@ -67,8 +67,8 @@ export function generateRefreshToken(userId: number, email: string, sid?: string
 
     const options: jwt.SignOptions = {
         expiresIn: JWT_REFRESH_EXPIRES_IN as jwt.SignOptions['expiresIn'],
-        issuer: 'durkkas-erp',
-        audience: 'durkkas-api',
+        issuer: 'Agaran-erp',
+        audience: 'Agaran-api',
     };
 
     return jwt.sign(payload, JWT_SECRET!, options);
@@ -88,8 +88,8 @@ export function verifyToken(token: string): JWTPayload | null {
         if (!token) return null;
 
         const decoded = jwt.verify(token, JWT_SECRET!, {
-            issuer: 'durkkas-erp',
-            audience: 'durkkas-api',
+            issuer: 'Agaran-erp',
+            audience: 'Agaran-api',
         }) as JWTPayload;
 
         return decoded;

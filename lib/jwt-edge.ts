@@ -31,8 +31,8 @@ export async function verifyTokenEdge(token: string): Promise<JWTPayload | null>
         const secretUint8 = new TextEncoder().encode(secret);
 
         const { payload } = await jose.jwtVerify(token, secretUint8, {
-            issuer: 'durkkas-erp',
-            audience: 'durkkas-api',
+            issuer: 'Agaran-erp',
+            audience: 'Agaran-api',
         });
 
         return payload as unknown as JWTPayload;

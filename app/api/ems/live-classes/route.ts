@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
 
         if (data.meeting_platform === 'JITSI' && !data.meeting_id) {
             const timestamp = Date.now().toString(36);
-            data.meeting_id = `Durkkas-C${scope.companyId}-${data.course_id}-${timestamp}`;
+            data.meeting_id = `Agaran-C${scope.companyId}-${data.course_id}-${timestamp}`;
         }
 
         // Clean data before insert - convert "" to null for BIGINT columns
