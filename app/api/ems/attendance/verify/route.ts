@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
         const result = await AttendanceService.submitFaceVerification(
             {
                 sessionId: body.sessionId,
-                studentId: student.id,
+                studentId: student!.id,
                 verificationType: body.verificationType || 'OPENING',
                 faceImageUrl: body.faceImageUrl,
                 faceDescriptor: body.faceEmbedding,
