@@ -9,6 +9,9 @@ import { getUserIdFromToken } from '@/lib/jwt';
 import { getUserTenantScope } from '@/middleware/tenantFilter';
 import { TutorService } from '@/lib/services/TutorService';
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 60 * 1000;
 
 export async function GET(
     req: NextRequest,
@@ -24,12 +27,18 @@ export async function GET(
         if (!scope.companyId) return errorResponse(null, 'Company context required', 400);
 
         const tutorId = parseInt(params.id);
+
+        const cacheKey = `ems_tutor:${tutorId}:${scope.companyId}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Tutor fetched successfully (cached)');
+
         const data = await TutorService.getTutorById(tutorId, scope.companyId);
 
         if (!data) {
             return errorResponse(null, 'Tutor not found', 404);
         }
 
+        await dataCache.set(cacheKey, data, CACHE_TTL);
         return successResponse(data, 'Tutor fetched successfully');
 
     } catch (error: any) {

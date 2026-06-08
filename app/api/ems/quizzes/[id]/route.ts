@@ -4,6 +4,9 @@ import { getUserTenantScope } from '@/middleware/tenantFilter';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { QuizService } from '@/lib/services/QuizService';
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 60 * 1000;
 
 export async function GET(
     req: NextRequest,
@@ -18,8 +21,13 @@ export async function GET(
         const scope = await getUserTenantScope(userId);
         const quizId = parseInt(params.id);
 
+        const cacheKey = `ems_quiz:${quizId}:${scope.companyId}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Quiz fetched successfully (cached)');
+
         const quiz = await QuizService.getQuizById(quizId, scope.companyId!);
 
+        await dataCache.set(cacheKey, quiz, CACHE_TTL);
         return successResponse(quiz, 'Quiz fetched successfully');
     } catch (error: any) {
         return errorResponse(null, error.message || 'Failed to fetch quiz');

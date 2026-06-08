@@ -9,12 +9,19 @@ import { successResponse, errorResponse } from '@/lib/errorHandler';
 import { supabase } from '@/lib/supabase';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { getUserTenantScope } from '@/middleware/tenantFilter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 5 * 60 * 1000;
 
 // GET - Get menu registry (grouped by module)
 export async function GET(req: NextRequest) {
     try {
         const userId = await getUserIdFromToken(req);
         if (!userId) return errorResponse('UNAUTHORIZED', 'Unauthorized', 401);
+
+        const cacheKey = 'platform_menu_registry';
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Menu registry fetched successfully (cached)');
 
         const _scope = await getUserTenantScope(userId);
 
@@ -89,6 +96,7 @@ export async function GET(req: NextRequest) {
             totalMenus: menus?.length || 0
         };
 
+        await dataCache.set(cacheKey, result, CACHE_TTL);
         return successResponse(result, 'Menu registry fetched successfully');
     } catch (error: any) {
         return errorResponse('INTERNAL_ERROR', error.message, 500);

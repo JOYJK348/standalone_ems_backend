@@ -7,6 +7,9 @@ import { StudentService } from '@/lib/services/StudentService';
 import { app_auth } from '@/lib/supabase';
 import bcrypt from 'bcryptjs';
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 60 * 1000;
 
 export async function GET(req: NextRequest) {
     try {
@@ -21,11 +24,16 @@ export async function GET(req: NextRequest) {
         const { searchParams } = new URL(req.url);
         const courseId = searchParams.get('course_id');
 
+        const cacheKey = `ems_students:${scope.companyId}:${courseId || 'all'}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, `Students fetched successfully (${cached?.length || 0} records) (cached)`);
+
         const data = await StudentService.getAllStudents(
             scope.companyId!,
             courseId ? parseInt(courseId) : undefined
         );
 
+        await dataCache.set(cacheKey, data, CACHE_TTL);
         return successResponse(data, `Students fetched successfully (${data?.length || 0} records)`);
 
     } catch (error: any) {

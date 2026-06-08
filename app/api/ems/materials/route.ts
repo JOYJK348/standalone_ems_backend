@@ -5,6 +5,9 @@ import { getUserTenantScope, autoAssignCompany } from '@/middleware/tenantFilter
 import { ems, app_auth } from '@/lib/supabase';
 import { courseMaterialSchema } from '@/lib/validations/ems';
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 60 * 1000;
 
 export async function POST(req: NextRequest) {
     try {
@@ -60,6 +63,10 @@ export async function GET(req: NextRequest) {
         const { searchParams } = new URL(req.url);
         const courseId = searchParams.get('course_id');
 
+        const cacheKey = `ems_materials:${scope.companyId}:${courseId || 'all'}:${isManager ? 'manager' : 'user'}`
+        const cached = await dataCache.get(cacheKey)
+        if (cached) return successResponse(cached, 'Materials fetched successfully (cached)')
+
         let query = (ems as any).supabase
             .schema('ems')
             .from('course_materials')
@@ -112,6 +119,7 @@ export async function GET(req: NextRequest) {
 
         if (error) throw error;
 
+        await dataCache.set(cacheKey, data || [], CACHE_TTL)
         return successResponse(data || [], 'Materials fetched successfully');
     } catch (error: any) {
         console.error('Materials GET error:', error);

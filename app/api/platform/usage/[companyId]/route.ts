@@ -3,8 +3,9 @@ import { core, app_auth, supabase } from '@/lib/supabase';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { getUserTenantScope } from '@/middleware/tenantFilter';
 import { successResponse, errorResponse } from '@/lib/errorHandler';
+import { dataCache } from '@/lib/cache/dataCache';
 
-export const dynamic = 'force-dynamic';
+const CACHE_TTL = 30 * 1000;
 
 /**
  * GET /api/platform/usage/[companyId]
@@ -16,6 +17,10 @@ export async function GET(req: NextRequest, { params }: { params: { companyId: s
         if (!userId) return errorResponse('UNAUTHORIZED', 'Authentication required', 401);
 
         const targetCompanyId = params.companyId;
+
+        const cacheKey = `platform_usage:${targetCompanyId}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Explicit company usage fetched (cached)');
 
         if (!targetCompanyId || isNaN(Number(targetCompanyId)) || Number(targetCompanyId) === 0) {
             return successResponse({
@@ -113,6 +118,7 @@ export async function GET(req: NextRequest, { params }: { params: { companyId: s
 
         console.log('[Usage API] Results:', JSON.stringify(usageData, null, 2));
 
+        await dataCache.set(cacheKey, usageData, CACHE_TTL);
         return successResponse(usageData, 'Explicit company usage fetched');
     } catch (err: any) {
         return errorResponse('INTERNAL_SERVER_ERROR', err.message, 500);

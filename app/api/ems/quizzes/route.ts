@@ -5,6 +5,9 @@ import { getUserIdFromToken } from '@/lib/jwt';
 import { QuizService } from '@/lib/services/QuizService';
 import { ems } from '@/lib/supabase';
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 60 * 1000;
 
 export async function GET(req: NextRequest) {
     try {
@@ -15,6 +18,14 @@ export async function GET(req: NextRequest) {
         if (menuAccess instanceof Response) return menuAccess;
 
         const scope = await getUserTenantScope(userId);
+
+        const { searchParams } = new URL(req.url);
+        const page = Math.max(1, parseInt(searchParams.get('page') || '1'));
+        const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') || '20')));
+
+        const cacheKey = `ems_quizzes:${scope.companyId}:${scope.emsProfile?.profileType || 'all'}:${page}:${limit}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Quizzes fetched successfully (cached)');
 
         let courseIds: number[] | undefined = undefined;
         if (scope.emsProfile?.profileType === 'tutor' && scope.emsProfile.profileId) {
@@ -47,12 +58,9 @@ export async function GET(req: NextRequest) {
             }
         }
 
-        const { searchParams } = new URL(req.url);
-        const page = Math.max(1, parseInt(searchParams.get('page') || '1'));
-        const limit = Math.min(100, Math.max(1, parseInt(searchParams.get('limit') || '20')));
-
         const data = await QuizService.getAllQuizzes(scope.companyId!, courseIds, page, limit);
 
+        await dataCache.set(cacheKey, data, CACHE_TTL);
         return successResponse(data, 'Quizzes fetched successfully');
     } catch (error: any) {
         return errorResponse(null, error.message || 'Failed to fetch quizzes');

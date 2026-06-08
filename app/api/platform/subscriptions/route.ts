@@ -3,6 +3,9 @@ import { core } from '@/lib/supabase';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { getUserTenantScope } from '@/middleware/tenantFilter';
 import { successResponse, errorResponse } from '@/lib/errorHandler';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 10 * 60 * 1000;
 
 /**
  * GET /api/platform/subscriptions
@@ -10,11 +13,16 @@ import { successResponse, errorResponse } from '@/lib/errorHandler';
  */
 export async function GET() {
     try {
+        const cacheKey = 'platform_subscriptions';
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached);
+
         const { data, error } = await core.subscriptionPlans()
             .select('*')
             .order('monthly_price', { ascending: true });
 
         if (error) return errorResponse('DATABASE_ERROR', error.message, 500);
+        await dataCache.set(cacheKey, data, CACHE_TTL);
         return successResponse(data);
     } catch (err: any) {
         return errorResponse('INTERNAL_SERVER_ERROR', err.message, 500);

@@ -8,11 +8,18 @@ import { app_auth } from '@/lib/supabase';
 import { successResponse, errorResponse } from '@/lib/errorHandler';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { getUserTenantScope } from '@/middleware/tenantFilter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 5 * 60 * 1000;
 
 export async function GET(req: NextRequest) {
     try {
         const actingUserId = await getUserIdFromToken(req);
         if (!actingUserId) return errorResponse(null, 'Unauthorized', 401);
+
+        const cacheKey = 'ems_menu_permissions';
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Menu permissions fetched successfully (cached)');
 
         const { data, error } = await app_auth.menuPermissions().select(`
             *,
@@ -21,6 +28,7 @@ export async function GET(req: NextRequest) {
         `);
 
         if (error) throw new Error(error.message);
+        await dataCache.set(cacheKey, data, CACHE_TTL);
         return successResponse(data, 'Menu permissions fetched successfully');
     } catch (error: any) {
         return errorResponse(null, error.message);

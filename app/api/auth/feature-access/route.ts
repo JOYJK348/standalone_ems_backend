@@ -2,8 +2,7 @@ import { NextRequest } from 'next/server';
 import { successResponse, errorResponse } from '@/lib/errorHandler';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { getCompanyFeatureAccess, getAccessibleMenus } from '@/middleware/featureAccess';
-
-export const dynamic = 'force-dynamic';
+import { dataCache } from '@/lib/cache/dataCache';
 
 /**
  * GET /api/auth/feature-access
@@ -18,6 +17,10 @@ export async function GET(req: NextRequest) {
         if (!userId) {
             return errorResponse('AUTHENTICATION_REQUIRED', 'Please login to continue', 401);
         }
+
+        const cacheKey = `auth_feature_access:${userId}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Feature access loaded successfully (cached)');
 
         // Get complete feature access
         const featureAccess = await getCompanyFeatureAccess(userId);
@@ -37,6 +40,8 @@ export async function GET(req: NextRequest) {
             accessibleMenuIds,
             isPlatformAdmin: featureAccess.isPlatformAdmin,
         };
+
+        await dataCache.set(cacheKey, response, 60 * 1000);
 
         return successResponse(response, 'Feature access loaded successfully');
 

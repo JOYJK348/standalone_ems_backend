@@ -9,11 +9,18 @@ import { app_auth } from '@/lib/supabase';
 import { getUserTenantScope } from '@/middleware/tenantFilter';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { AuditService } from '@/lib/services/AuditService';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 5 * 60 * 1000;
 
 export async function GET(req: NextRequest) {
     try {
         const url = new URL(req.url);
         const roleId = url.searchParams.get('roleId');
+
+        const cacheKey = `ems_role_permissions:${roleId || 'all'}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Role permissions fetched (cached)');
 
         let query = app_auth.rolePermissions()
             .select('*');
@@ -24,6 +31,7 @@ export async function GET(req: NextRequest) {
 
         const { data, error } = await query;
         if (error) throw new Error(error.message);
+        await dataCache.set(cacheKey, data || [], CACHE_TTL);
         return successResponse(data || [], 'Role permissions fetched');
     } catch (error: any) {
         return errorResponse(null, error.message);

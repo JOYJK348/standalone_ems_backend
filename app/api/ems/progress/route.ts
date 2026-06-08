@@ -10,6 +10,9 @@ import { autoAssignCompany } from '@/middleware/tenantFilter';
 import { lessonProgressSchema } from '@/lib/validations/ems';
 import { EnrollmentService } from '@/lib/services/EnrollmentService';
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 30 * 1000;
 
 export async function GET(req: NextRequest) {
     try {
@@ -26,8 +29,13 @@ export async function GET(req: NextRequest) {
             return errorResponse(null, 'enrollment_id is required', 400);
         }
 
+        const cacheKey = `ems_progress:${enrollmentId}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Progress fetched successfully (cached)');
+
         const data = await EnrollmentService.getLessonProgress(parseInt(enrollmentId));
 
+        await dataCache.set(cacheKey, data, CACHE_TTL);
         return successResponse(data, 'Progress fetched successfully');
 
     } catch (error: any) {

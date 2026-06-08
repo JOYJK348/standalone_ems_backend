@@ -4,11 +4,18 @@ import { SCHEMAS } from '@/config/constants';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { getUserTenantScope } from '@/middleware/tenantFilter';
 import { successResponse, errorResponse } from '@/lib/errorHandler';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 15 * 1000;
 
 export async function GET(req: NextRequest) {
     try {
         const userId = await getUserIdFromToken(req);
         if (!userId) return errorResponse('UNAUTHORIZED', 'Authentication required', 401);
+
+        const cacheKey = `ems_notifications:${userId}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Notifications fetched (cached)');
 
         const scope = await getUserTenantScope(userId);
 
@@ -34,6 +41,7 @@ export async function GET(req: NextRequest) {
             notification_type: n.notification_type || 'INFO'
         }));
 
+        await dataCache.set(cacheKey, processed, CACHE_TTL);
         return successResponse(processed);
     } catch (err: any) {
         console.error(`[NOTIFICATIONS] Exception:`, err);

@@ -8,6 +8,9 @@ import { successResponse, errorResponse } from '@/lib/errorHandler';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { ems } from '@/lib/supabase';
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 30 * 1000;
 
 export async function GET(req: NextRequest) {
     try {
@@ -20,6 +23,10 @@ export async function GET(req: NextRequest) {
         const scope = await import('@/middleware/tenantFilter').then(m =>
             m.getUserTenantScope(userId)
         );
+
+        const cacheKey = `ems_my_quizzes:${userId}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'My quizzes fetched successfully (cached)');
 
         // Get student record
         const { data: student } = await ems.students()
@@ -138,6 +145,7 @@ export async function GET(req: NextRequest) {
             };
         });
 
+        await dataCache.set(cacheKey, mappedQuizzes, CACHE_TTL);
         return successResponse(mappedQuizzes, 'My quizzes fetched successfully');
 
     } catch (error: any) {

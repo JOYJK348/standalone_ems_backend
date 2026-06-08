@@ -4,6 +4,9 @@ import { getUserIdFromToken } from '@/lib/jwt'
 import { getUserTenantScope } from '@/middleware/tenantFilter'
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter'
 import { ems, core } from '@/lib/supabase'
+import { dataCache } from '@/lib/cache/dataCache'
+
+const CACHE_TTL = 60 * 1000
 
 export async function GET(req: NextRequest) {
   try {
@@ -25,6 +28,10 @@ export async function GET(req: NextRequest) {
 
     const companyId = scope.companyId
 
+    const cacheKey = `ems_hr_enrollments:${companyId}:${page}:${limit}:${search}:${status || 'all'}`
+    const cached = await dataCache.get(cacheKey)
+    if (cached) return successResponse(cached, 'Enrollments fetched successfully (cached)')
+
     let query = ems.enrollments()
       .select('*, students!inner(id, first_name, last_name, email, phone), courses!inner(id, course_name, course_code)', { count: 'exact' })
       .eq('company_id', companyId)
@@ -41,7 +48,7 @@ export async function GET(req: NextRequest) {
 
     if (error) return errorResponse(null, error.message, 500)
 
-    return successResponse({
+    const responseData = {
       data: data || [],
       pagination: {
         page,
@@ -49,7 +56,10 @@ export async function GET(req: NextRequest) {
         total: count ?? 0,
         totalPages: Math.ceil((count ?? 0) / limit)
       }
-    }, 'Enrollments fetched successfully')
+    }
+
+    await dataCache.set(cacheKey, responseData, CACHE_TTL)
+    return successResponse(responseData, 'Enrollments fetched successfully')
   } catch (error: any) {
     console.error('[HR Enrollments GET] Error:', error.message)
     return errorResponse(null, error.message, 500)

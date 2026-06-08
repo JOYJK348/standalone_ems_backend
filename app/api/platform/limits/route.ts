@@ -3,6 +3,9 @@ import { core } from '@/lib/supabase';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { getUserTenantScope } from '@/middleware/tenantFilter';
 import { successResponse, errorResponse } from '@/lib/errorHandler';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 5 * 60 * 1000;
 
 // Default plan limits configuration
 const PLAN_LIMITS: Record<string, any> = {
@@ -70,6 +73,10 @@ export async function GET(req: NextRequest) {
             return errorResponse('FORBIDDEN', 'Company context required', 403);
         }
 
+        const cacheKey = `platform_limits:${scope.companyId}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Plan limits fetched successfully (cached)');
+
         // Get company's subscription plan
         const { data: company, error: companyError } = await core.companies()
             .select('subscription_plan, subscription_start_date, subscription_end_date, enabled_modules, trial_started_at, trial_expired')
@@ -116,6 +123,7 @@ export async function GET(req: NextRequest) {
             trial_expired: company?.trial_expired || false
         };
 
+        await dataCache.set(cacheKey, result, CACHE_TTL);
         return successResponse(result, 'Plan limits fetched successfully');
     } catch (err: any) {
         return errorResponse('INTERNAL_SERVER_ERROR', err.message, 500);

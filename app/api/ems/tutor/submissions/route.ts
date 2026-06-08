@@ -9,6 +9,9 @@ import { getUserIdFromToken } from '@/lib/jwt';
 import { getUserTenantScope } from '@/middleware/tenantFilter';
 import { AssessmentService } from '@/lib/services/AssessmentService';
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 30 * 1000;
 
 export async function GET(req: NextRequest) {
     try {
@@ -22,6 +25,10 @@ export async function GET(req: NextRequest) {
 
         const { searchParams } = new URL(req.url);
         const status = searchParams.get('status') || undefined;
+
+        const cacheKey = `ems_tutor_submissions:${userId}:${scope.companyId}:${status || 'all'}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, `Submissions fetched successfully (${cached?.length || 0} records) (cached)`);
 
         const { core } = require('@/lib/supabase');
 
@@ -42,6 +49,7 @@ export async function GET(req: NextRequest) {
             status
         );
 
+        await dataCache.set(cacheKey, data, CACHE_TTL);
         return successResponse(data, `Submissions fetched successfully (${data?.length || 0} records)`);
 
     } catch (error: any) {

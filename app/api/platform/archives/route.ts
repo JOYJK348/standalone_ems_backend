@@ -8,8 +8,9 @@ import { successResponse, errorResponse } from '@/lib/errorHandler';
 import { app_auth, core } from '@/lib/supabase';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { getUserTenantScope } from '@/middleware/tenantFilter';
+import { dataCache } from '@/lib/cache/dataCache';
 
-export const dynamic = 'force-dynamic';
+const CACHE_TTL = 60 * 1000;
 
 export async function GET(req: NextRequest) {
     try {
@@ -20,7 +21,11 @@ export async function GET(req: NextRequest) {
         if (scope.roleLevel < 5) return errorResponse('FORBIDDEN', 'Forbidden: Platform Admin only', 403);
 
         const url = new URL(req.url);
-        const type = url.searchParams.get('type') || 'all'; // 'users', 'employees', 'companies'
+        const type = url.searchParams.get('type') || 'all';
+
+        const cacheKey = `platform_archives:${type}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Archives fetched successfully (cached)');
 
         const results = {
             users: [] as any[],
@@ -61,6 +66,7 @@ export async function GET(req: NextRequest) {
             if (!error && companies) results.companies = companies;
         }
 
+        await dataCache.set(cacheKey, results, CACHE_TTL);
         return successResponse(results, 'Archives fetched successfully');
 
     } catch (error: any) {

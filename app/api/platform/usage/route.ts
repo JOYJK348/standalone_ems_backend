@@ -3,8 +3,9 @@ import { core, app_auth, supabase } from '@/lib/supabase';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { getUserTenantScope } from '@/middleware/tenantFilter';
 import { successResponse, errorResponse } from '@/lib/errorHandler';
+import { dataCache } from '@/lib/cache/dataCache';
 
-export const dynamic = 'force-dynamic';
+const CACHE_TTL = 30 * 1000;
 
 /**
  * GET /api/platform/usage
@@ -19,6 +20,10 @@ export async function GET(req: NextRequest) {
         if (!scope.companyId) {
             return errorResponse('FORBIDDEN', 'Company context required', 403);
         }
+
+        const cacheKey = `platform_usage:${scope.companyId}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Usage and limits fetched successfully (cached)');
 
         // 1. Get Company Details
         const { data: company, error: companyError } = await supabase
@@ -106,6 +111,7 @@ export async function GET(req: NextRequest) {
             active_designations: designationsResult.count || 0
         };
 
+        await dataCache.set(cacheKey, usageData, CACHE_TTL);
         return successResponse(usageData, 'Usage and limits fetched successfully');
     } catch (err: any) {
         return errorResponse('INTERNAL_SERVER_ERROR', err.message, 500);

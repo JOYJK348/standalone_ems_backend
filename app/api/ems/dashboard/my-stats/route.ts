@@ -5,6 +5,9 @@ import { getUserTenantScope } from '@/middleware/tenantFilter'
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter'
 import { ems, core, fromSchema } from '@/lib/supabase'
 import { SCHEMAS } from '@/config/constants'
+import { dataCache } from '@/lib/cache/dataCache'
+
+const CACHE_TTL = 30 * 1000
 
 export async function GET(req: NextRequest) {
   try {
@@ -20,6 +23,10 @@ export async function GET(req: NextRequest) {
     const companyId = scope.companyId
     const roleName = scope.roleName || ''
     const emsProfile = scope.emsProfile
+
+    const cacheKey = `ems_my_stats:${userId}:${companyId}`
+    const cached = await dataCache.get(cacheKey)
+    if (cached) return successResponse(cached, 'Dashboard stats fetched successfully (cached)')
 
     const baseFilters: Record<string, any> = {}
     if (companyId) baseFilters.company_id = companyId
@@ -196,7 +203,9 @@ export async function GET(req: NextRequest) {
       stats[key] = val ?? 0
     }
 
-    return successResponse({ stats, roleName, companyId }, 'Dashboard stats fetched successfully')
+    const responseData = { stats, roleName, companyId }
+    await dataCache.set(cacheKey, responseData, CACHE_TTL)
+    return successResponse(responseData, 'Dashboard stats fetched successfully')
   } catch (error: any) {
     console.error('[MyStats] Error:', error.message)
     return errorResponse(null, error.message || 'Failed to fetch dashboard stats', 500)

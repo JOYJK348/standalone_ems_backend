@@ -10,6 +10,9 @@ import { getUserIdFromToken } from '@/lib/jwt';
 import { getUserTenantScope } from '@/middleware/tenantFilter';
 import bcrypt from 'bcryptjs';
 import { GlobalSettings } from '@/lib/settings';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 30 * 1000;
 
 export async function GET(req: NextRequest) {
     try {
@@ -17,6 +20,10 @@ export async function GET(req: NextRequest) {
         if (!actingUserId) return errorResponse('UNAUTHORIZED', 'Unauthorized', 401);
 
         const scope = await getUserTenantScope(actingUserId);
+
+        const cacheKey = `ems_users:${scope.companyId || 'all'}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Users fetched successfully (cached)');
 
         // Multi-tenant check: 
         // Platform Admin (5) can see all users
@@ -74,6 +81,7 @@ export async function GET(req: NextRequest) {
             };
         });
 
+        await dataCache.set(cacheKey, enrichedData, CACHE_TTL);
         return successResponse(enrichedData, 'Users fetched successfully');
     } catch (error: any) {
         return errorResponse('INTERNAL_ERROR', error.message);

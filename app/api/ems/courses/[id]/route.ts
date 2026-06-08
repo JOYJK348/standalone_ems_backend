@@ -6,6 +6,9 @@ import { courseSchema } from '@/lib/validations/ems';
 import { CourseService } from '@/lib/services/CourseService';
 import { ems } from '@/lib/supabase';
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 60 * 1000;
 
 export async function GET(
     req: NextRequest,
@@ -24,6 +27,10 @@ export async function GET(
 
         const scope = await getUserTenantScope(userId);
         const courseId = parseInt(params.id);
+
+        const cacheKey = `ems_course:${courseId}:${scope.companyId}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Course fetched successfully (cached)');
 
         let course = await CourseService.getCourseDetails(
             courseId,
@@ -67,6 +74,7 @@ export async function GET(
             }
         }
 
+        await dataCache.set(cacheKey, course, CACHE_TTL);
         return successResponse(course, 'Course fetched successfully');
 
     } catch (error: any) {

@@ -9,6 +9,9 @@ import { getUserIdFromToken } from '@/lib/jwt';
 import { getUserTenantScope } from '@/middleware/tenantFilter';
 import { AnalyticsService } from '@/lib/services/AnalyticsService';
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 30 * 1000;
 
 export async function GET(req: NextRequest) {
     try {
@@ -22,6 +25,10 @@ export async function GET(req: NextRequest) {
         const { searchParams } = new URL(req.url);
         const type = searchParams.get('type') || 'overview'; // overview, course, growth
         const courseId = searchParams.get('course_id');
+
+        const cacheKey = `ems_analytics:${scope.companyId}:${type}:${courseId || 'all'}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, `Analytics (${type}) fetched successfully (cached)`);
 
         let data;
 
@@ -41,6 +48,7 @@ export async function GET(req: NextRequest) {
                 break;
         }
 
+        await dataCache.set(cacheKey, data, CACHE_TTL);
         return successResponse(data, `Analytics (${type}) fetched successfully`);
 
     } catch (error: any) {

@@ -4,6 +4,9 @@ import { getUserIdFromToken } from '@/lib/jwt'
 import { getUserTenantScope } from '@/middleware/tenantFilter'
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter'
 import { app_auth, core } from '@/lib/supabase'
+import { dataCache } from '@/lib/cache/dataCache'
+
+const CACHE_TTL = 30 * 1000
 
 export async function GET(req: NextRequest) {
   try {
@@ -15,6 +18,10 @@ export async function GET(req: NextRequest) {
 
     const scope = await getUserTenantScope(userId)
     if (!scope.companyId) return errorResponse(null, 'Company context required', 403)
+
+    const cacheKey = `ems_users:${scope.companyId}`
+    const cached = await dataCache.get(cacheKey)
+    if (cached) return successResponse(cached, 'Users fetched successfully (cached)')
 
     const { data: employees, error: empError } = await core.employees()
       .select('user_id, first_name, last_name, email, is_active')
@@ -32,6 +39,7 @@ export async function GET(req: NextRequest) {
       is_active: emp.is_active
     }))
 
+    await dataCache.set(cacheKey, users, CACHE_TTL)
     return successResponse(users, 'Users fetched successfully')
   } catch (error: any) {
     return errorResponse(null, error.message || 'Failed to fetch users', 500)

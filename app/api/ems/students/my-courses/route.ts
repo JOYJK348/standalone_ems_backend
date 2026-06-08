@@ -9,6 +9,9 @@ import { getUserIdFromToken } from '@/lib/jwt';
 import { EnrollmentService } from '@/lib/services/EnrollmentService';
 import { ems } from '@/lib/supabase';
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 60 * 1000;
 
 export async function GET(req: NextRequest) {
     try {
@@ -21,6 +24,10 @@ export async function GET(req: NextRequest) {
         const scope = await import('@/middleware/tenantFilter').then(m =>
             m.getUserTenantScope(userId)
         );
+
+        const cacheKey = `ems_my_courses:${userId}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'My courses fetched successfully (cached)');
 
         // Get student record
         const { data: student } = await ems.students()
@@ -68,6 +75,7 @@ export async function GET(req: NextRequest) {
 
         if (error) throw error;
 
+        await dataCache.set(cacheKey, enrollments || [], CACHE_TTL);
         return successResponse(enrollments || [], 'My courses fetched successfully');
 
     } catch (error: any) {

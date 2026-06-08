@@ -4,6 +4,9 @@ import { getUserIdFromToken } from '@/lib/jwt'
 import { getUserTenantScope } from '@/middleware/tenantFilter'
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter'
 import { ems } from '@/lib/supabase'
+import { dataCache } from '@/lib/cache/dataCache'
+
+const CACHE_TTL = 5 * 60 * 1000
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -16,6 +19,10 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     const scope = await getUserTenantScope(userId)
     if (!scope.companyId) return errorResponse(null, 'Company context required', 403)
 
+    const cacheKey = `ems_dynamic_role:${params.id}:${scope.companyId}`
+    const cached = await dataCache.get(cacheKey)
+    if (cached) return successResponse(cached, 'Role fetched successfully (cached)')
+
     const { data, error } = await ems.dynamicRoles()
       .select('*')
       .eq('id', params.id)
@@ -26,6 +33,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       if (error.code === '42501') return errorResponse(null, 'Permissions not configured', 500)
       return errorResponse(null, 'Role not found', 404)
     }
+    await dataCache.set(cacheKey, data, CACHE_TTL)
     return successResponse(data, 'Role fetched successfully')
   } catch (error: any) {
     return errorResponse(null, error.message || 'Failed to fetch role', 500)

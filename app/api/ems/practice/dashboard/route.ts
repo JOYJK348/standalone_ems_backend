@@ -4,6 +4,9 @@ import { getUserIdFromToken } from '@/lib/jwt';
 import { getUserTenantScope } from '@/middleware/tenantFilter';
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter';
 import { PracticeService } from '@/lib/services/PracticeService';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 60 * 1000;
 
 /**
  * GET /api/ems/practice/dashboard
@@ -20,8 +23,13 @@ export async function GET(req: NextRequest) {
         const scope = await getUserTenantScope(userId);
         if (scope.roleLevel < 1) return errorResponse(null, 'Forbidden', 403);
 
+        const cacheKey = `ems_practice_dashboard:${scope.companyId}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Practice quotas fetched successfully (cached)');
+
         const quotas = await PracticeService.getPracticeQuotas(scope.companyId!);
 
+        await dataCache.set(cacheKey, quotas, CACHE_TTL);
         return successResponse(quotas, 'Practice quotas fetched successfully');
 
     } catch (error: any) {

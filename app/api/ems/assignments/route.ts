@@ -8,6 +8,9 @@ import { ems } from '@/lib/supabase';
 import { EMSNotificationTriggers } from '@/lib/services/EMSNotificationTriggers';
 import { NotificationService } from '@/lib/services/NotificationService';
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 60 * 1000;
 
 export async function GET(req: NextRequest) {
     try {
@@ -18,6 +21,13 @@ export async function GET(req: NextRequest) {
         if (menuAccess instanceof Response) return menuAccess;
 
         const scope = await getUserTenantScope(userId);
+
+        const { searchParams } = new URL(req.url);
+        const batchId = searchParams.get('batchId') ? parseInt(searchParams.get('batchId')!) : undefined;
+
+        const cacheKey = `ems_assignments:${scope.companyId}:${scope.emsProfile?.profileType || 'all'}:${batchId || 'all'}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Assignments fetched successfully (cached)');
 
         let courseIds: number[] | undefined = undefined;
         if (scope.emsProfile?.profileType === 'tutor' && scope.emsProfile.profileId) {
@@ -50,11 +60,9 @@ export async function GET(req: NextRequest) {
             }
         }
 
-        const { searchParams } = new URL(req.url);
-        const batchId = searchParams.get('batchId') ? parseInt(searchParams.get('batchId')!) : undefined;
-
         const data = await AssignmentService.getAllAssignments(scope.companyId!, courseIds, batchId);
 
+        await dataCache.set(cacheKey, data, CACHE_TTL);
         return successResponse(data, 'Assignments fetched successfully');
     } catch (error: any) {
         console.error('Error in GET assignments:', error);

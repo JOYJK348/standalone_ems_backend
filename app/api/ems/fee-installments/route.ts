@@ -5,6 +5,9 @@ import { getUserTenantScope } from '@/middleware/tenantFilter'
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter'
 import { fromSchema } from '@/lib/supabase'
 import { SCHEMAS } from '@/config/constants'
+import { dataCache } from '@/lib/cache/dataCache'
+
+const CACHE_TTL = 60 * 1000
 
 function isMissingTableErr(err: { message?: string; code?: string } | null): boolean {
   if (!err) return false
@@ -25,6 +28,10 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url)
     const feeStructureId = searchParams.get('fee_structure_id')
 
+    const cacheKey = `ems_fee_installments:${scope.companyId}:${feeStructureId || 'all'}`
+    const cached = await dataCache.get(cacheKey)
+    if (cached) return successResponse(cached, 'Installments fetched successfully (cached)')
+
     let query = fromSchema(SCHEMAS.EMS, 'fee_installments')
       .select('*, fee_structure!inner(company_id, fee_name, fee_type, amount)')
       .eq('fee_structure.company_id', scope.companyId)
@@ -40,6 +47,7 @@ export async function GET(req: NextRequest) {
       if (isMissingTableErr(error)) return successResponse([], 'Fee installments table not yet created — run migration')
       return errorResponse(null, error.message, 500)
     }
+    await dataCache.set(cacheKey, data || [], CACHE_TTL)
     return successResponse(data || [], 'Installments fetched successfully')
   } catch (error: any) {
     console.error('[FeeInstallments GET] Error:', error.message)

@@ -3,11 +3,18 @@ import { successResponse, errorResponse } from '@/lib/errorHandler';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { getUserTenantScope } from '@/middleware/tenantFilter';
 import { app_auth, supabaseService } from '@/lib/supabase';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 30 * 1000;
 
 export async function GET(req: NextRequest) {
     try {
         const userId = await getUserIdFromToken(req);
         if (!userId) return errorResponse('UNAUTHORIZED', 'Unauthorized', 401);
+
+        const cacheKey = `ems_me:${userId}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Current user fetched (cached)');
 
         const scope = await getUserTenantScope(userId);
 
@@ -51,11 +58,14 @@ export async function GET(req: NextRequest) {
             // We continue even if permissions fail to load, returned as empty set
         }
 
-        return successResponse({
+        const responseData = {
             user,
             scope,
             permissions: Array.from(allPermissions)
-        }, 'Current user fetched');
+        };
+
+        await dataCache.set(cacheKey, responseData, CACHE_TTL);
+        return successResponse(responseData, 'Current user fetched');
     } catch (error: any) {
         return errorResponse('INTERNAL_ERROR', error.message);
     }

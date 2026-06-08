@@ -5,6 +5,9 @@ import { getUserIdFromToken } from '@/lib/jwt';
 import { studentSchema } from '@/lib/validations/ems';
 import { StudentService } from '@/lib/services/StudentService';
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 60 * 1000;
 
 /**
  * GET /api/ems/students/[id]
@@ -24,12 +27,17 @@ export async function GET(
         const scope = await getUserTenantScope(userId);
         const studentId = parseInt(params.id);
 
+        const cacheKey = `ems_student:${studentId}:${scope.companyId}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Student fetched successfully (cached)');
+
         const student = await StudentService.getStudentById(studentId, scope.companyId!);
 
         if (!student) {
             return errorResponse(null, 'Student not found', 404);
         }
 
+        await dataCache.set(cacheKey, student, CACHE_TTL);
         return successResponse(student, 'Student fetched successfully');
 
     } catch (error: any) {

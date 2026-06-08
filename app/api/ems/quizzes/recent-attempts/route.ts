@@ -4,6 +4,9 @@ import { getUserTenantScope } from '@/middleware/tenantFilter';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { ems } from '@/lib/supabase';
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 30 * 1000;
 
 export async function GET(req: NextRequest) {
     try {
@@ -13,6 +16,10 @@ export async function GET(req: NextRequest) {
         if (menuAccess instanceof Response) return menuAccess;
 
         const scope = await getUserTenantScope(userId);
+
+        const cacheKey = `ems_recent_attempts:${userId}:${scope.companyId}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Recent quiz attempts fetched successfully (cached)');
 
         let query = ems.quizAttempts()
             .select(`
@@ -62,6 +69,7 @@ export async function GET(req: NextRequest) {
         const { data, error } = await query;
 
         if (error) throw error;
+        await dataCache.set(cacheKey, data, CACHE_TTL);
         return successResponse(data, 'Recent quiz attempts fetched successfully');
     } catch (error: any) {
         return errorResponse(null, error.message || 'Failed to fetch recent attempts');

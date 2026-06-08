@@ -4,6 +4,9 @@ import { getUserTenantScope } from '@/middleware/tenantFilter';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { BatchService } from '@/lib/services/BatchService';
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 60 * 1000;
 
 export async function GET(
     req: NextRequest,
@@ -21,6 +24,10 @@ export async function GET(
         const { searchParams } = new URL(req.url);
         const details = searchParams.get('details') === 'true';
 
+        const cacheKey = `ems_batch:${batchId}:${scope.companyId}:${details ? 'details' : 'basic'}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Batch fetched successfully (cached)');
+
         let batch;
         if (details) {
             batch = await BatchService.getBatchDetails(batchId);
@@ -32,6 +39,7 @@ export async function GET(
             return errorResponse(null, 'Batch not found', 404);
         }
 
+        await dataCache.set(cacheKey, batch, CACHE_TTL);
         return successResponse(batch, 'Batch fetched successfully');
     } catch (error: any) {
         return errorResponse(null, error.message || 'Failed to fetch batch');

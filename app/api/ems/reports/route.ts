@@ -5,6 +5,9 @@ import { getUserTenantScope } from '@/middleware/tenantFilter'
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter'
 import { ems, fromSchema } from '@/lib/supabase'
 import { SCHEMAS } from '@/config/constants'
+import { dataCache } from '@/lib/cache/dataCache'
+
+const CACHE_TTL = 30 * 1000
 
 export async function GET(req: NextRequest) {
   try {
@@ -19,6 +22,10 @@ export async function GET(req: NextRequest) {
 
     const { searchParams } = new URL(req.url)
     const type = searchParams.get('type') || 'summary'
+
+    const cacheKey = `ems_reports:${scope.companyId}:${type}`
+    const cached = await dataCache.get(cacheKey)
+    if (cached) return successResponse(cached, `${type} report generated (cached)`)
 
     const companyId = scope.companyId
 
@@ -61,14 +68,16 @@ export async function GET(req: NextRequest) {
             .catch(() => 0),
         ])
 
-        return successResponse({
+        const summaryData = {
           totalRevenue,
           totalPayments,
           pendingCount,
           paidCount,
           overdueCount,
           outstandingBalance: totalRevenue - totalPayments
-        }, 'Summary report generated')
+        }
+        await dataCache.set(cacheKey, summaryData, CACHE_TTL)
+        return successResponse(summaryData, 'Summary report generated')
       }
 
       case 'monthly': {
@@ -111,11 +120,13 @@ export async function GET(req: NextRequest) {
           if (months[key] && pmt.payment_status === 'COMPLETED') months[key].collections += Number(pmt.amount_paid || 0)
         }
 
-        return successResponse({
+        const monthlyData = {
           monthly: Object.entries(months)
             .reverse()
             .map(([key, val]) => ({ month: key, ...val }))
-        }, 'Monthly report generated')
+        }
+        await dataCache.set(cacheKey, monthlyData, CACHE_TTL)
+        return successResponse(monthlyData, 'Monthly report generated')
       }
 
       case 'invoice_status': {
@@ -146,10 +157,12 @@ export async function GET(req: NextRequest) {
             .then(r => r.count ?? 0).catch(() => 0),
         ])
 
-        return successResponse({
+        const statusData = {
           statuses: { pending, paid, overdue, cancelled },
           total: pending + paid + overdue + cancelled
-        }, 'Invoice status report generated')
+        }
+        await dataCache.set(cacheKey, statusData, CACHE_TTL)
+        return successResponse(statusData, 'Invoice status report generated')
       }
 
       default:

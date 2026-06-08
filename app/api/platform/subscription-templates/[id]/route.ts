@@ -8,6 +8,9 @@ import { successResponse, errorResponse } from '@/lib/errorHandler';
 import { supabase } from '@/lib/supabase';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { getUserTenantScope } from '@/middleware/tenantFilter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 5 * 60 * 1000;
 
 // GET - Get single template
 export async function GET(
@@ -18,6 +21,10 @@ export async function GET(
         const { id } = await params;
         const userId = await getUserIdFromToken(req);
         if (!userId) return errorResponse('UNAUTHORIZED', 'Unauthorized', 401);
+
+        const cacheKey = `platform_subscription_template:${id}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Template fetched successfully (cached)');
 
         const { data, error } = await supabase
             .schema('core')
@@ -30,6 +37,7 @@ export async function GET(
             return errorResponse('NOT_FOUND', 'Template not found', 404);
         }
 
+        await dataCache.set(cacheKey, data, CACHE_TTL);
         return successResponse(data, 'Template fetched successfully');
     } catch (error: any) {
         return errorResponse('INTERNAL_ERROR', error.message, 500);

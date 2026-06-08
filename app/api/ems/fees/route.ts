@@ -4,6 +4,9 @@ import { getUserIdFromToken } from '@/lib/jwt'
 import { getUserTenantScope } from '@/middleware/tenantFilter'
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter'
 import { ems } from '@/lib/supabase'
+import { dataCache } from '@/lib/cache/dataCache'
+
+const CACHE_TTL = 60 * 1000
 
 export async function GET(req: NextRequest) {
   try {
@@ -23,6 +26,12 @@ export async function GET(req: NextRequest) {
     const offset = (page - 1) * limit
     const courseId = searchParams.get('course_id')
     const activeOnly = searchParams.get('active') !== 'false'
+
+    const cacheKey = `ems_fees:${scope.companyId}:${id || 'list'}:${courseId || 'all'}:${page}:${limit}:${activeOnly}`
+    if (!id) {
+      const cached = await dataCache.get(cacheKey)
+      if (cached) return successResponse(cached, 'Fee structures fetched successfully (cached)')
+    }
 
     if (id) {
       const { data, error } = await ems.feeStructure()
@@ -61,7 +70,7 @@ export async function GET(req: NextRequest) {
 
     if (error) return errorResponse(null, error.message, 500)
 
-    return successResponse({
+    const responseData = {
       data: data || [],
       pagination: {
         page,
@@ -69,7 +78,10 @@ export async function GET(req: NextRequest) {
         total: countResult.count ?? count ?? 0,
         totalPages: Math.ceil((countResult.count ?? count ?? 0) / limit)
       }
-    }, 'Fee structures fetched successfully')
+    }
+
+    await dataCache.set(cacheKey, responseData, CACHE_TTL)
+    return successResponse(responseData, 'Fee structures fetched successfully')
   } catch (error: any) {
     console.error('[Fees GET] Error:', error.message)
     return errorResponse(null, error.message, 500)

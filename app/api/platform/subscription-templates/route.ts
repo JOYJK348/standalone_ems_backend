@@ -9,6 +9,9 @@ import { successResponse, errorResponse } from '@/lib/errorHandler';
 import { supabase } from '@/lib/supabase';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { getUserTenantScope } from '@/middleware/tenantFilter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 5 * 60 * 1000;
 
 // GET - List all subscription templates
 export async function GET(req: NextRequest) {
@@ -17,6 +20,10 @@ export async function GET(req: NextRequest) {
         if (!userId) return errorResponse('UNAUTHORIZED', 'Unauthorized', 401);
 
         const scope = await getUserTenantScope(userId);
+
+        const cacheKey = `platform_subscription_templates:${scope.roleLevel >= 5 ? 'admin' : 'public'}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, `Fetched ${cached?.length || 0} subscription templates (cached)`);
 
         let query = supabase
             .schema('core')
@@ -33,6 +40,7 @@ export async function GET(req: NextRequest) {
 
         if (error) throw new Error(error.message);
 
+        await dataCache.set(cacheKey, data, CACHE_TTL);
         return successResponse(data, `Fetched ${data?.length || 0} subscription templates`);
     } catch (error: any) {
         return errorResponse('INTERNAL_ERROR', error.message, 500);

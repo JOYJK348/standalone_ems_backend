@@ -5,6 +5,9 @@ import { getUserTenantScope } from '@/middleware/tenantFilter'
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter'
 import { fromSchema } from '@/lib/supabase'
 import { SCHEMAS } from '@/config/constants'
+import { dataCache } from '@/lib/cache/dataCache'
+
+const CACHE_TTL = 60 * 1000
 
 function isMissingTableErr(err: { message?: string; code?: string } | null): boolean {
   if (!err) return false
@@ -25,6 +28,10 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url)
     const studentId = searchParams.get('student_id')
 
+    const cacheKey = `ems_discounts:${scope.companyId}:${studentId || 'all'}`
+    const cached = await dataCache.get(cacheKey)
+    if (cached) return successResponse(cached, 'Discounts fetched successfully (cached)')
+
     let query = fromSchema(SCHEMAS.EMS, 'discounts')
       .select('*, students!inner(id, company_id, first_name, last_name, student_code)')
       .eq('students.company_id', scope.companyId)
@@ -41,6 +48,7 @@ export async function GET(req: NextRequest) {
       if (isMissingTableErr(error)) return successResponse([], 'Discounts table not yet created — run migration')
       return errorResponse(null, error.message, 500)
     }
+    await dataCache.set(cacheKey, data || [], CACHE_TTL)
     return successResponse(data || [], 'Discounts fetched successfully')
   } catch (error: any) {
     console.error('[Discounts GET] Error:', error.message)

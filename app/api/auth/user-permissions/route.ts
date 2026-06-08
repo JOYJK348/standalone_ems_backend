@@ -8,6 +8,9 @@ import { app_auth } from '@/lib/supabase';
 import { successResponse, errorResponse } from '@/lib/errorHandler';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { getUserTenantScope } from '@/middleware/tenantFilter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 5 * 60 * 1000;
 
 export async function GET(req: NextRequest) {
     try {
@@ -16,6 +19,10 @@ export async function GET(req: NextRequest) {
 
         const { searchParams } = new URL(req.url);
         const userId = searchParams.get('userId');
+
+        const cacheKey = `ems_user_permissions:${userId || 'all'}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'User permissions fetched successfully (cached)');
 
         let query = app_auth.userPermissions().select('*, permission:permissions(name, display_name)');
 
@@ -26,6 +33,7 @@ export async function GET(req: NextRequest) {
         const { data, error } = await query;
         if (error) throw new Error(error.message);
 
+        await dataCache.set(cacheKey, data, CACHE_TTL);
         return successResponse(data, 'User permissions fetched successfully');
     } catch (error: any) {
         return errorResponse('INTERNAL_ERROR', error.message);

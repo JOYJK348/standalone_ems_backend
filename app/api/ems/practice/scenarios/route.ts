@@ -3,6 +3,7 @@ import { successResponse, asyncHandler } from '@/lib/errorHandler';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { PracticeService } from '@/lib/services/PracticeService';
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter';
+import { dataCache } from '@/lib/cache/dataCache';
 
 export const GET = asyncHandler(async (req: NextRequest) => {
     const userId = await getUserIdFromToken(req);
@@ -28,6 +29,12 @@ export const GET = asyncHandler(async (req: NextRequest) => {
         return successResponse(scenario, 'Scenario fetched');
     }
 
+    // Cache scenario listing for 2 minutes (quasi-static data)
+    const cacheKey = `ems_practice_scenarios:${moduleType || 'all'}`;
+    const cached = await dataCache.get(cacheKey);
+    if (cached) return successResponse(cached, 'Scenarios fetched (cached)');
+
     const scenarios = await PracticeService.getScenarios(moduleType || undefined);
+    await dataCache.set(cacheKey, scenarios, 2 * 60 * 1000);
     return successResponse(scenarios, 'Scenarios fetched');
 });

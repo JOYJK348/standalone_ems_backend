@@ -3,6 +3,9 @@ import { supabaseService, app_auth } from '@/lib/supabase';
 import { successResponse, errorResponse } from '@/lib/errorHandler';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { getUserTenantScope } from '@/middleware/tenantFilter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 10 * 60 * 1000;
 
 /**
  * AUTH: Permissions API
@@ -10,11 +13,16 @@ import { getUserTenantScope } from '@/middleware/tenantFilter';
  */
 export async function GET(_req: NextRequest) {
     try {
+        const cacheKey = 'ems_permissions';
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Permissions fetched successfully (cached)');
+
         const { data, error } = await app_auth.permissions()
             .select('*')
             .order('name', { ascending: true });
 
         if (error) throw new Error(error.message);
+        await dataCache.set(cacheKey, data, CACHE_TTL);
         return successResponse(data, 'Permissions fetched successfully');
     } catch (error: any) {
         return errorResponse('INTERNAL_ERROR', error.message || 'Failed to fetch permissions');

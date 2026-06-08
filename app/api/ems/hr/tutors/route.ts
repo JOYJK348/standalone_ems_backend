@@ -4,6 +4,9 @@ import { getUserIdFromToken } from '@/lib/jwt'
 import { getUserTenantScope } from '@/middleware/tenantFilter'
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter'
 import { ems, core } from '@/lib/supabase'
+import { dataCache } from '@/lib/cache/dataCache'
+
+const CACHE_TTL = 60 * 1000
 
 export async function GET(req: NextRequest) {
   try {
@@ -22,6 +25,10 @@ export async function GET(req: NextRequest) {
     const offset = (page - 1) * limit
     const search = searchParams.get('search') || ''
     const companyId = scope.companyId
+
+    const cacheKey = `ems_hr_tutors:${companyId}:${page}:${limit}:${search}`
+    const cached = await dataCache.get(cacheKey)
+    if (cached) return successResponse(cached, 'Tutors fetched successfully (cached)')
 
     let empQuery = core.employees()
       .select('*', { count: 'exact' })
@@ -55,7 +62,7 @@ export async function GET(req: NextRequest) {
       courseCount: tutorCourseMap[emp.id]?.length || 0,
     }))
 
-    return successResponse({
+    const responseData = {
       data: tutors,
       pagination: {
         page,
@@ -63,7 +70,10 @@ export async function GET(req: NextRequest) {
         total: count ?? 0,
         totalPages: Math.ceil((count ?? 0) / limit)
       }
-    }, 'Tutors fetched successfully')
+    }
+
+    await dataCache.set(cacheKey, responseData, CACHE_TTL)
+    return successResponse(responseData, 'Tutors fetched successfully')
   } catch (error: any) {
     console.error('[HR Tutors GET] Error:', error.message)
     return errorResponse(null, error.message, 500)

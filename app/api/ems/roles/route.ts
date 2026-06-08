@@ -4,6 +4,9 @@ import { getUserIdFromToken } from '@/lib/jwt'
 import { getUserTenantScope } from '@/middleware/tenantFilter'
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter'
 import { ems } from '@/lib/supabase'
+import { dataCache } from '@/lib/cache/dataCache'
+
+const CACHE_TTL = 5 * 60 * 1000
 
 export async function GET(req: NextRequest) {
   try {
@@ -15,6 +18,10 @@ export async function GET(req: NextRequest) {
 
     const scope = await getUserTenantScope(userId)
     if (!scope.companyId) return errorResponse(null, 'Company context required', 403)
+
+    const cacheKey = `ems_dynamic_roles:${scope.companyId}`
+    const cached = await dataCache.get(cacheKey)
+    if (cached) return successResponse(cached, 'Roles fetched successfully (cached)')
 
     const { data, error } = await ems.dynamicRoles()
       .select('id, role_name, description, menu_ids, is_active, created_at, updated_at')
@@ -43,6 +50,7 @@ export async function GET(req: NextRequest) {
       user_count: userCounts[r.id] || 0
     }))
 
+    await dataCache.set(cacheKey, roles, CACHE_TTL)
     return successResponse(roles, 'Roles fetched successfully')
   } catch (error: any) {
     return errorResponse(null, error.message || 'Failed to fetch roles', 500)

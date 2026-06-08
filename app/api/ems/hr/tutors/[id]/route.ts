@@ -4,6 +4,9 @@ import { getUserIdFromToken } from '@/lib/jwt'
 import { getUserTenantScope } from '@/middleware/tenantFilter'
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter'
 import { ems, core } from '@/lib/supabase'
+import { dataCache } from '@/lib/cache/dataCache'
+
+const CACHE_TTL = 60 * 1000
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -20,6 +23,10 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
     if (!tutorId) return errorResponse(null, 'Invalid tutor ID', 400)
 
     const companyId = scope.companyId
+
+    const cacheKey = `ems_hr_tutor:${tutorId}:${companyId}`
+    const cached = await dataCache.get(cacheKey)
+    if (cached) return successResponse(cached, 'Tutor details fetched successfully (cached)')
 
     const { data: employee, error: empError } = await core.employees()
       .select('*')
@@ -46,13 +53,16 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       assignment_id: ct.id,
     }))
 
-    return successResponse({
+    const responseData = {
       tutor: {
         ...employee,
         courses,
         courseCount: courses.length,
       }
-    }, 'Tutor details fetched successfully')
+    }
+
+    await dataCache.set(cacheKey, responseData, CACHE_TTL)
+    return successResponse(responseData, 'Tutor details fetched successfully')
   } catch (error: any) {
     console.error('[HR Tutor Detail GET] Error:', error.message)
     return errorResponse(null, error.message, 500)

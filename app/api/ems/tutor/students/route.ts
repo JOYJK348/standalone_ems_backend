@@ -9,6 +9,9 @@ import { getUserIdFromToken } from '@/lib/jwt';
 import { getUserTenantScope } from '@/middleware/tenantFilter';
 import { EnrollmentService } from '@/lib/services/EnrollmentService';
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 60 * 1000;
 
 export async function GET(req: NextRequest) {
     try {
@@ -19,6 +22,10 @@ export async function GET(req: NextRequest) {
 
         const scope = await getUserTenantScope(userId);
         if (!scope.companyId) return errorResponse(null, 'Company context required', 400);
+
+        const cacheKey = `ems_tutor_students:${userId}:${scope.companyId}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Tutor students fetched successfully (cached)');
 
         const { core } = require('@/lib/supabase');
 
@@ -38,6 +45,7 @@ export async function GET(req: NextRequest) {
             scope.companyId!
         );
 
+        await dataCache.set(cacheKey, data, CACHE_TTL);
         return successResponse(data, 'Tutor students fetched successfully');
 
     } catch (error: any) {

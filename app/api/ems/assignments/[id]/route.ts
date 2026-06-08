@@ -4,6 +4,9 @@ import { getUserTenantScope } from '@/middleware/tenantFilter';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { AssignmentService } from '@/lib/services/AssignmentService';
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 60 * 1000;
 
 export async function GET(
     req: NextRequest,
@@ -18,8 +21,13 @@ export async function GET(
         const scope = await getUserTenantScope(userId);
         const assignmentId = parseInt(params.id);
 
+        const cacheKey = `ems_assignment:${assignmentId}:${scope.companyId}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Assignment fetched successfully (cached)');
+
         const assignment = await AssignmentService.getAssignmentDetails(assignmentId, scope.companyId!);
 
+        await dataCache.set(cacheKey, assignment, CACHE_TTL);
         return successResponse(assignment, 'Assignment fetched successfully');
     } catch (error: any) {
         return errorResponse(null, error.message || 'Failed to fetch assignment');

@@ -9,6 +9,9 @@ import { successResponse, errorResponse } from '@/lib/errorHandler';
 import { supabase } from '@/lib/supabase';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { getUserTenantScope } from '@/middleware/tenantFilter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 5 * 60 * 1000;
 
 // GET - Get allowed menus for current company
 export async function GET(req: NextRequest) {
@@ -17,6 +20,10 @@ export async function GET(req: NextRequest) {
         if (!userId) return errorResponse('UNAUTHORIZED', 'Unauthorized', 401);
 
         const scope = await getUserTenantScope(userId);
+
+        const cacheKey = `platform_company_menus:${scope.companyId || 'platform'}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, `Fetched ${cached?.flatMenus?.length || 0} allowed menus (cached)`);
 
         // Platform Admin sees all menus
         if (scope.roleLevel >= 5) {
@@ -146,13 +153,16 @@ export async function GET(req: NextRequest) {
             }
         });
 
-        return successResponse({
+        const responseData = {
             menus: rootMenus,
             flatMenus: allowedMenus,
             plan: company.subscription_plan,
             enabledModules: company.enabled_modules,
             templateId: company.subscription_template_id
-        }, `Fetched ${allowedMenus.length} allowed menus`);
+        };
+
+        await dataCache.set(cacheKey, responseData, CACHE_TTL);
+        return successResponse(responseData, `Fetched ${allowedMenus.length} allowed menus`);
     } catch (error: any) {
         return errorResponse('INTERNAL_ERROR', error.message, 500);
     }

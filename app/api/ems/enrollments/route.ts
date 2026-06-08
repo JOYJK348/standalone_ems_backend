@@ -10,6 +10,9 @@ import { autoAssignCompany } from '@/middleware/tenantFilter';
 import { enrollmentSchema } from '@/lib/validations/ems';
 import { EnrollmentService } from '@/lib/services/EnrollmentService';
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 60 * 1000;
 
 export const GET = asyncHandler(async (req: NextRequest) => {
     const userId = await getUserIdFromToken(req);
@@ -29,11 +32,16 @@ export const GET = asyncHandler(async (req: NextRequest) => {
         m.getUserTenantScope(userId)
     );
 
+    const cacheKey = `ems_enrollments:${studentId}:${scope.companyId}`;
+    const cached = await dataCache.get(cacheKey);
+    if (cached) return successResponse(cached, 'Enrollments fetched successfully (cached)');
+
     const data = await EnrollmentService.getStudentEnrollments(
         parseInt(studentId),
         scope.companyId!
     );
 
+    await dataCache.set(cacheKey, data, CACHE_TTL);
     return successResponse(data, 'Enrollments fetched successfully');
 });
 

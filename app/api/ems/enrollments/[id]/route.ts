@@ -4,6 +4,9 @@ import { getUserTenantScope } from '@/middleware/tenantFilter';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { EnrollmentService } from '@/lib/services/EnrollmentService';
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 60 * 1000;
 
 export async function GET(
     req: NextRequest,
@@ -18,12 +21,17 @@ export async function GET(
         const scope = await getUserTenantScope(userId);
         const enrollmentId = parseInt(params.id);
 
+        const cacheKey = `ems_enrollment:${enrollmentId}:${scope.companyId}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Enrollment fetched successfully (cached)');
+
         const enrollment = await EnrollmentService.getEnrollmentById(enrollmentId, scope.companyId!);
 
         if (!enrollment) {
             return errorResponse(null, 'Enrollment not found', 404);
         }
 
+        await dataCache.set(cacheKey, enrollment, CACHE_TTL);
         return successResponse(enrollment, 'Enrollment fetched successfully');
 
     } catch (error: any) {

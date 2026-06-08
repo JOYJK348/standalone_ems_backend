@@ -9,6 +9,9 @@ import { getUserIdFromToken } from '@/lib/jwt';
 import { ems } from '@/lib/supabase';
 import { AssignmentService } from '@/lib/services/AssignmentService';
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 30 * 1000;
 
 export async function GET(req: NextRequest) {
     try {
@@ -21,6 +24,10 @@ export async function GET(req: NextRequest) {
         const scope = await import('@/middleware/tenantFilter').then(m =>
             m.getUserTenantScope(userId)
         );
+
+        const cacheKey = `ems_my_assignments:${userId}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'My assignments fetched successfully (cached)');
 
         // Get student record
         const { data: student } = await ems.students()
@@ -59,6 +66,7 @@ export async function GET(req: NextRequest) {
             course_name: a.courses?.course_name
         }));
 
+        await dataCache.set(cacheKey, mappedAssignments, CACHE_TTL);
         return successResponse(mappedAssignments, 'My assignments fetched successfully');
 
     } catch (error: any) {

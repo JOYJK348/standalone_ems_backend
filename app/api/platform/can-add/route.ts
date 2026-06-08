@@ -3,6 +3,9 @@ import { core, app_auth } from '@/lib/supabase';
 import { getUserIdFromToken } from '@/lib/jwt';
 import { getUserTenantScope } from '@/middleware/tenantFilter';
 import { successResponse, errorResponse } from '@/lib/errorHandler';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 15 * 1000;
 
 // Plan limits lookup
 const PLAN_LIMITS: Record<string, Record<string, number>> = {
@@ -27,6 +30,10 @@ export async function GET(req: NextRequest) {
         }
 
         const resourceType = req.nextUrl.searchParams.get('resource_type');
+
+        const cacheKey = `platform_can_add:${scope.companyId}:${resourceType}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached);
         if (!resourceType || !['user', 'employee', 'branch', 'department', 'designation'].includes(resourceType)) {
             return errorResponse('VALIDATION_ERROR', 'Valid resource_type is required: user, employee, branch, department, designation', 400);
         }
@@ -103,7 +110,7 @@ export async function GET(req: NextRequest) {
         const allowed = currentCount < maxAllowed;
         const remaining = Math.max(0, maxAllowed - currentCount);
 
-        return successResponse({
+        const responseData = {
             allowed,
             current: currentCount,
             max: maxAllowed,
@@ -111,7 +118,10 @@ export async function GET(req: NextRequest) {
             message: allowed
                 ? `You can add ${remaining} more ${resourceType}(s)`
                 : `You have reached the maximum limit of ${maxAllowed} ${resourceType}(s) for your ${planName} plan. Upgrade to add more.`
-        });
+        };
+
+        await dataCache.set(cacheKey, responseData, CACHE_TTL);
+        return successResponse(responseData);
     } catch (err: any) {
         return errorResponse('INTERNAL_SERVER_ERROR', err.message, 500);
     }

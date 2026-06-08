@@ -4,6 +4,9 @@ import { getUserIdFromToken } from '@/lib/jwt';
 import { ems } from '@/lib/supabase';
 import { StudentService } from '@/lib/services/StudentService';
 import { requireMenuAccessAppRouter } from '@/lib/menuAccessAppRouter';
+import { dataCache } from '@/lib/cache/dataCache';
+
+const CACHE_TTL = 60 * 1000;
 
 export async function GET(req: NextRequest) {
     try {
@@ -12,6 +15,10 @@ export async function GET(req: NextRequest) {
 
         const menuAccess = await requireMenuAccessAppRouter(req, 'ems.students.materials');
         if (menuAccess instanceof Response) return menuAccess;
+
+        const cacheKey = `ems_my_materials:${userId}`;
+        const cached = await dataCache.get(cacheKey);
+        if (cached) return successResponse(cached, 'Materials fetched successfully (cached)');
 
         // 1. Get student identity
         const student = await StudentService.getStudentByUserId(userId);
@@ -68,6 +75,7 @@ export async function GET(req: NextRequest) {
             return true;
         });
 
+        await dataCache.set(cacheKey, filteredMaterials, CACHE_TTL);
         return successResponse(filteredMaterials, 'Materials fetched successfully');
 
     } catch (error: any) {
