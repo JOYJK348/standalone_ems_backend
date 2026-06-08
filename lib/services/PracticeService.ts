@@ -129,7 +129,7 @@ export class PracticeService {
      * Simple GST Validation Logic for Simulation
      */
     private static validateGstEntry(data: any) {
-        const { place_of_supply, igst_amount, cgst_amount, sgst_amount, taxable_value, gst_rate } = data;
+        const { place_of_supply, igst, cgst, sgst, taxable_value, gst_rate } = data;
         const totalTaxRate = gst_rate / 100;
         const expectedTotalTax = taxable_value * totalTaxRate;
 
@@ -137,11 +137,11 @@ export class PracticeService {
         const isTamilNadu = place_of_supply?.toLowerCase().includes('tamil nadu') || place_of_supply === '33';
 
         if (isTamilNadu) {
-            if (igst_amount > 0) return { isValid: false, message: 'Inter-state tax (IGST) cannot be applied for Intra-state supply.' };
-            if (Math.abs((cgst_amount + sgst_amount) - expectedTotalTax) > 1) return { isValid: false, message: 'Tax calculation mismatch for CGST/SGST.' };
+            if (igst > 0) return { isValid: false, message: 'Inter-state tax (IGST) cannot be applied for Intra-state supply.' };
+            if (Math.abs((cgst + sgst) - expectedTotalTax) > 1) return { isValid: false, message: 'Tax calculation mismatch for CGST/SGST.' };
         } else {
-            if (cgst_amount > 0 || sgst_amount > 0) return { isValid: false, message: 'Intra-state tax (CGST/SGST) cannot be applied for Inter-state supply.' };
-            if (Math.abs(igst_amount - expectedTotalTax) > 1) return { isValid: false, message: 'Tax calculation mismatch for IGST.' };
+            if (cgst > 0 || sgst > 0) return { isValid: false, message: 'Intra-state tax (CGST/SGST) cannot be applied for Inter-state supply.' };
+            if (Math.abs(igst - expectedTotalTax) > 1) return { isValid: false, message: 'Tax calculation mismatch for IGST.' };
         }
 
         return { isValid: true, message: 'Correct tax calculation and placement.' };
