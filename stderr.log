@@ -1,0 +1,13 @@
+[2026-06-06T21:50:40.107Z] [ERROR] API Error {"error":{"code":null,"message":"Could not find the 'branch_id' column of 'dynamic_user_roles' in the schema cache","statusCode":500}}
+❌ [NotificationService] Bulk DB Error: {
+  code: 'PGRST205',
+  details: null,
+  hint: "Perhaps you meant the table 'app_auth.permissions'",
+  message: "Could not find the table 'app_auth.notifications' in the schema cache"
+}
+❌ [NotificationService] Bulk Exception: {
+  code: 'PGRST205',
+  details: null,
+  hint: "Perhaps you meant the table 'app_auth.permissions'",
+  message: "Could not find the table 'app_auth.notifications' in the schema cache"
+}

@@ -1,0 +1,21 @@
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+  - Environments: .env
+
+ ✓ Starting...
+ ✓ Ready in 3.2s
+ ✓ Compiled /middleware in 312ms (140 modules)
+[CORS DEBUG] Method: POST | Path: /api/auth/login | Origin:  | Allowed: true
+ ○ Compiling /api/auth/login ...
+ ✓ Compiled /api/auth/login in 642ms (217 modules)
+Supabase service key loaded, prefix: eyJhbGci
+ POST /api/auth/login 200 in 2236ms
+[CORS DEBUG] Method: POST | Path: /api/ems/user-roles | Origin:  | Allowed: true
+ ✓ Compiled /api/ems/user-roles in 291ms (222 modules)
+✅ [AUDIT SERVICE] Event Registered: LOGIN by tenant.admin@dipl.edu
+Supabase service key loaded, prefix: eyJhbGci
+[2026-06-06T21:50:39.596Z] [INFO] [TenantFilter] Scoping trace {"userId":19,"roles":"TENANT_ADMIN"}
+[2026-06-06T21:50:39.636Z] [INFO] [TenantFilter] Final selection {"userId":19,"role":"TENANT_ADMIN","level":4,"companyId":8,"branchId":5,"reason":"Default High-Level"}
+ POST /api/ems/user-roles 500 in 1302ms
+[NotificationService] Bulk sending to 2 users. Title: User Login
+ ✓ Compiled in 194ms (222 modules)

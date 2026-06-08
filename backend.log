@@ -1,0 +1,20 @@
+
+> durkkas-ems-backend@1.0.0 dev
+> node -e "const ip = Object.values(require('os').networkInterfaces()).flat().find(i => i.family === 'IPv4' && !i.internal)?.address; console.log('\x1b[35m%s\x1b[0m', '>>> API Node Access: http://' + ip + ':3000');" && next dev -p 3000 -H 0.0.0.0
+
+[35m>>> API Node Access: http://10.18.213.228:3000[0m
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+  - Network:      http://0.0.0.0:3000
+  - Environments: .env
+
+ ✓ Starting...
+ ✓ Ready in 2s
+ ✓ Compiled /middleware in 154ms (140 modules)
+[CORS DEBUG] Method: OPTIONS | Path: /api/auth/notifications | Origin: http://localhost:3001 | Allowed: true
+[CORS DEBUG] Method: GET | Path: /api/auth/notifications | Origin: http://localhost:3001 | Allowed: true
+ ✓ Compiled /api/auth/notifications in 251ms (215 modules)
+Supabase service key loaded, prefix: eyJhbGci
+[2026-06-07T05:46:13.305Z] [INFO] [TenantFilter] Scoping trace {"userId":21,"roles":"FINANCE_MANAGER"}
+[2026-06-07T05:46:13.306Z] [INFO] [TenantFilter] Final selection {"userId":21,"role":"FINANCE_MANAGER","level":3,"companyId":8,"branchId":5,"reason":"Branch Match for 5"}
+ GET /api/auth/notifications 200 in 1083ms

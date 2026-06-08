@@ -1,0 +1,16 @@
+
+> durkkas-ems-backend@1.0.0 dev
+> node -e "const ip = Object.values(require('os').networkInterfaces()).flat().find(i => i.family === 'IPv4' && !i.internal)?.address; console.log('\x1b[35m%s\x1b[0m', '>>> API Node Access: http://' + ip + ':3000');" && next dev -p 3000 -H 0.0.0.0
+
+[35m>>> API Node Access: http://192.168.29.47:3000[0m
+  ▲ Next.js 14.2.35
+  - Local:        http://localhost:3000
+  - Network:      http://0.0.0.0:3000
+
+ ✓ Starting...
+ ✓ Ready in 2.5s
+ ○ Compiling /middleware ...
+ ✓ Compiled /middleware in 1916ms (140 modules)
+[CORS DEBUG] Method: OPTIONS | Path: /api/auth/feature-access | Origin: http://localhost:3001 | Allowed: true
+[CORS DEBUG] Method: GET | Path: /api/auth/feature-access | Origin: http://localhost:3001 | Allowed: true
+[?25h

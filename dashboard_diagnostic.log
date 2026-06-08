@@ -1,0 +1,935 @@
+[2026-05-28T18:46:33.948Z] Starting GET request 
+[2026-05-28T18:46:33.955Z] User ID resolved {
+  "userId": 1
+}
+[2026-05-28T18:46:34.199Z] Tenant scope resolved {
+  "scope": {
+    "userId": 1,
+    "roleLevel": 5,
+    "roleName": "PLATFORM_ADMIN",
+    "roleType": "PLATFORM",
+    "companyId": null,
+    "branchId": null,
+    "isScoped": true,
+    "selectionReason": "Highest in Company 8",
+    "emsProfile": {
+      "profileType": "manager",
+      "profileId": null
+    }
+  }
+}
+[2026-05-28T18:46:34.202Z] Resolving student record... 
+[2026-05-28T18:46:34.341Z] Starting GET request 
+[2026-05-28T18:46:34.343Z] User ID resolved {
+  "userId": 1
+}
+[2026-05-28T18:46:34.366Z] User ID mapping failed, trying email fallback... 
+[2026-05-28T18:46:34.605Z] Tenant scope resolved {
+  "scope": {
+    "userId": 1,
+    "roleLevel": 5,
+    "roleName": "PLATFORM_ADMIN",
+    "roleType": "PLATFORM",
+    "companyId": null,
+    "branchId": null,
+    "isScoped": true,
+    "selectionReason": "Highest in Company 8",
+    "emsProfile": {
+      "profileType": "manager",
+      "profileId": null
+    }
+  }
+}
+[2026-05-28T18:46:34.605Z] Resolving student record... 
+[2026-05-28T18:46:34.800Z] Student record NOT found 
+[2026-05-28T18:46:34.818Z] User ID mapping failed, trying email fallback... 
+[2026-05-28T18:46:35.210Z] Student record NOT found 
+[2026-05-28T18:46:38.683Z] Starting GET request 
+[2026-05-28T18:46:38.684Z] User ID resolved {
+  "userId": 1
+}
+[2026-05-28T18:46:38.843Z] Tenant scope resolved {
+  "scope": {
+    "userId": 1,
+    "roleLevel": 5,
+    "roleName": "PLATFORM_ADMIN",
+    "roleType": "PLATFORM",
+    "companyId": null,
+    "branchId": null,
+    "isScoped": true,
+    "selectionReason": "Highest in Company 8",
+    "emsProfile": {
+      "profileType": "manager",
+      "profileId": null
+    }
+  }
+}
+[2026-05-28T18:46:38.845Z] Resolving student record... 
+[2026-05-28T18:46:39.101Z] User ID mapping failed, trying email fallback... 
+[2026-05-28T18:46:39.460Z] Student record NOT found 
+[2026-05-28T18:46:40.533Z] Starting GET request 
+[2026-05-28T18:46:40.535Z] User ID resolved {
+  "userId": 1
+}
+[2026-05-28T18:46:40.691Z] Tenant scope resolved {
+  "scope": {
+    "userId": 1,
+    "roleLevel": 5,
+    "roleName": "PLATFORM_ADMIN",
+    "roleType": "PLATFORM",
+    "companyId": null,
+    "branchId": null,
+    "isScoped": true,
+    "selectionReason": "Highest in Company 8",
+    "emsProfile": {
+      "profileType": "manager",
+      "profileId": null
+    }
+  }
+}
+[2026-05-28T18:46:40.692Z] Resolving student record... 
+[2026-05-28T18:46:40.841Z] User ID mapping failed, trying email fallback... 
+[2026-05-28T18:46:41.146Z] Student record NOT found 
+[2026-05-28T18:49:05.206Z] Starting GET request 
+[2026-05-28T18:49:05.211Z] User ID resolved {
+  "userId": 1
+}
+[2026-05-28T18:49:05.946Z] Tenant scope resolved {
+  "scope": {
+    "userId": 1,
+    "roleLevel": 5,
+    "roleName": "PLATFORM_ADMIN",
+    "roleType": "PLATFORM",
+    "companyId": null,
+    "branchId": null,
+    "isScoped": true,
+    "selectionReason": "Highest in Company 8",
+    "emsProfile": {
+      "profileType": "manager",
+      "profileId": null
+    }
+  }
+}
+[2026-05-28T18:49:05.948Z] Resolving student record... 
+[2026-05-28T18:49:06.149Z] User ID mapping failed, trying email fallback... 
+[2026-05-28T18:49:06.763Z] Student record NOT found 
+[2026-05-28T19:01:17.208Z] Starting GET request 
+[2026-05-28T19:01:17.212Z] User ID resolved {
+  "userId": 1
+}
+[2026-05-28T19:01:17.814Z] FATAL API ERROR {
+  "message": "Failed to get tenant scope: permission denied for schema app_auth",
+  "stack": "Error: Failed to get tenant scope: permission denied for schema app_auth\n    at getUserTenantScope (webpack-internal:///(rsc)/./middleware/tenantFilter.ts:293:15)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async GET (webpack-internal:///(rsc)/./app/api/ems/students/dashboard/route.ts:27:23)\n    at async D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\compiled\\next-server\\app-route.runtime.dev.js:6:57228\n    at async eT.execute (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\compiled\\next-server\\app-route.runtime.dev.js:6:46851)\n    at async eT.handle (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\compiled\\next-server\\app-route.runtime.dev.js:6:58760)\n    at async doRender (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:1366:42)\n    at async cacheEntry.responseCache.get.routeKind (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:1588:28)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:1496:28)\n    at async DevServer.renderPageComponent (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:1924:24)\n    at async DevServer.renderToResponseImpl (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:1962:32)\n    at async DevServer.pipeImpl (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:922:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\next-server.js:272:17)\n    at async DevServer.handleRequestImpl (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:818:17)\n    at async D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:339:20\n    at async Span.traceAsyncFn (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\trace\\trace.js:154:20)\n    at async DevServer.handleRequest (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:336:24)\n    at async invokeRender (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\lib\\router-server.js:179:21)\n    at async handleRequest (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\lib\\router-server.js:359:24)\n    at async requestHandlerImpl (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\lib\\router-server.js:383:13)\n    at async Server.requestListener (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\lib\\start-server.js:141:13)"
+}
+[2026-05-28T19:21:10.242Z] Starting GET request 
+[2026-05-28T19:21:10.244Z] User ID resolved {
+  "userId": 1
+}
+[2026-05-28T19:21:10.270Z] Starting GET request 
+[2026-05-28T19:21:10.271Z] User ID resolved {
+  "userId": 1
+}
+[2026-05-28T19:21:10.396Z] FATAL API ERROR {
+  "message": "Failed to get tenant scope: permission denied for schema app_auth",
+  "stack": "Error: Failed to get tenant scope: permission denied for schema app_auth\n    at getUserTenantScope (webpack-internal:///(rsc)/./middleware/tenantFilter.ts:293:15)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async GET (webpack-internal:///(rsc)/./app/api/ems/students/dashboard/route.ts:27:23)\n    at async D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\compiled\\next-server\\app-route.runtime.dev.js:6:57228\n    at async eT.execute (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\compiled\\next-server\\app-route.runtime.dev.js:6:46851)\n    at async eT.handle (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\compiled\\next-server\\app-route.runtime.dev.js:6:58760)\n    at async doRender (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:1366:42)\n    at async cacheEntry.responseCache.get.routeKind (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:1588:28)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:1496:28)\n    at async DevServer.renderPageComponent (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:1924:24)\n    at async DevServer.renderToResponseImpl (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:1962:32)\n    at async DevServer.pipeImpl (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:922:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\next-server.js:272:17)\n    at async DevServer.handleRequestImpl (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:818:17)\n    at async D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:339:20\n    at async Span.traceAsyncFn (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\trace\\trace.js:154:20)\n    at async DevServer.handleRequest (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:336:24)\n    at async invokeRender (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\lib\\router-server.js:179:21)\n    at async handleRequest (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\lib\\router-server.js:359:24)\n    at async requestHandlerImpl (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\lib\\router-server.js:383:13)\n    at async Server.requestListener (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\lib\\start-server.js:141:13)"
+}
+[2026-05-28T19:21:10.710Z] FATAL API ERROR {
+  "message": "Failed to get tenant scope: permission denied for schema app_auth",
+  "stack": "Error: Failed to get tenant scope: permission denied for schema app_auth\n    at getUserTenantScope (webpack-internal:///(rsc)/./middleware/tenantFilter.ts:293:15)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async GET (webpack-internal:///(rsc)/./app/api/ems/students/dashboard/route.ts:27:23)\n    at async D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\compiled\\next-server\\app-route.runtime.dev.js:6:57228\n    at async eT.execute (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\compiled\\next-server\\app-route.runtime.dev.js:6:46851)\n    at async eT.handle (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\compiled\\next-server\\app-route.runtime.dev.js:6:58760)\n    at async doRender (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:1366:42)\n    at async cacheEntry.responseCache.get.routeKind (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:1588:28)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:1496:28)\n    at async DevServer.renderPageComponent (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:1924:24)\n    at async DevServer.renderToResponseImpl (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:1962:32)\n    at async DevServer.pipeImpl (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:922:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\next-server.js:272:17)\n    at async DevServer.handleRequestImpl (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:818:17)\n    at async D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:339:20\n    at async Span.traceAsyncFn (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\trace\\trace.js:154:20)\n    at async DevServer.handleRequest (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:336:24)\n    at async invokeRender (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\lib\\router-server.js:179:21)\n    at async handleRequest (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\lib\\router-server.js:359:24)\n    at async requestHandlerImpl (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\lib\\router-server.js:383:13)\n    at async Server.requestListener (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\lib\\start-server.js:141:13)"
+}
+[2026-05-28T19:21:12.329Z] Starting GET request 
+[2026-05-28T19:21:12.332Z] User ID resolved {
+  "userId": 1
+}
+[2026-05-28T19:21:12.479Z] FATAL API ERROR {
+  "message": "Failed to get tenant scope: permission denied for schema app_auth",
+  "stack": "Error: Failed to get tenant scope: permission denied for schema app_auth\n    at getUserTenantScope (webpack-internal:///(rsc)/./middleware/tenantFilter.ts:293:15)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async GET (webpack-internal:///(rsc)/./app/api/ems/students/dashboard/route.ts:27:23)\n    at async D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\compiled\\next-server\\app-route.runtime.dev.js:6:57228\n    at async eT.execute (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\compiled\\next-server\\app-route.runtime.dev.js:6:46851)\n    at async eT.handle (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\compiled\\next-server\\app-route.runtime.dev.js:6:58760)\n    at async doRender (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:1366:42)\n    at async cacheEntry.responseCache.get.routeKind (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:1588:28)\n    at async DevServer.renderToResponseWithComponentsImpl (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:1496:28)\n    at async DevServer.renderPageComponent (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:1924:24)\n    at async DevServer.renderToResponseImpl (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:1962:32)\n    at async DevServer.pipeImpl (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:922:25)\n    at async NextNodeServer.handleCatchallRenderRequest (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\next-server.js:272:17)\n    at async DevServer.handleRequestImpl (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\base-server.js:818:17)\n    at async D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:339:20\n    at async Span.traceAsyncFn (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\trace\\trace.js:154:20)\n    at async DevServer.handleRequest (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:336:24)\n    at async invokeRender (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\lib\\router-server.js:179:21)\n    at async handleRequest (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\lib\\router-server.js:359:24)\n    at async requestHandlerImpl (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\lib\\router-server.js:383:13)\n    at async Server.requestListener (D:\\ERP\\Clown\\ems_standalone\\backend\\node_modules\\next\\dist\\server\\lib\\start-server.js:141:13)"
+}
+[2026-05-29T14:14:51.867Z] Starting GET request 
+[2026-05-29T14:14:51.913Z] Starting GET request 
+[2026-05-29T14:14:51.916Z] User ID resolved {
+  "userId": 24
+}
+[2026-05-29T14:14:51.920Z] User ID resolved {
+  "userId": 24
+}
+[2026-05-29T14:14:52.419Z] Tenant scope resolved {
+  "scope": {
+    "userId": 24,
+    "roleLevel": 1,
+    "roleName": "STUDENT",
+    "roleType": "PRODUCT",
+    "companyId": 8,
+    "branchId": 5,
+    "isScoped": true,
+    "selectionReason": "Branch Match for 5"
+  }
+}
+[2026-05-29T14:14:52.423Z] Resolving student record... 
+[2026-05-29T14:14:52.431Z] Tenant scope resolved {
+  "scope": {
+    "userId": 24,
+    "roleLevel": 1,
+    "roleName": "STUDENT",
+    "roleType": "PRODUCT",
+    "companyId": 8,
+    "branchId": 5,
+    "isScoped": true,
+    "selectionReason": "Branch Match for 5"
+  }
+}
+[2026-05-29T14:14:52.435Z] Resolving student record... 
+[2026-05-29T14:14:52.624Z] User ID mapping failed, trying email fallback... 
+[2026-05-29T14:14:52.628Z] User ID mapping failed, trying email fallback... 
+[2026-05-29T14:14:53.027Z] Student record NOT found 
+[2026-05-29T14:14:53.033Z] Student record NOT found 
+[2026-05-29T14:15:03.561Z] Starting GET request 
+[2026-05-29T14:15:03.565Z] User ID resolved {
+  "userId": 24
+}
+[2026-05-29T14:15:04.183Z] Tenant scope resolved {
+  "scope": {
+    "userId": 24,
+    "roleLevel": 1,
+    "roleName": "STUDENT",
+    "roleType": "PRODUCT",
+    "companyId": 8,
+    "branchId": 5,
+    "isScoped": true,
+    "selectionReason": "Branch Match for 5"
+  }
+}
+[2026-05-29T14:15:04.186Z] Resolving student record... 
+[2026-05-29T14:15:04.389Z] User ID mapping failed, trying email fallback... 
+[2026-05-29T14:15:05.003Z] Student record NOT found 
+[2026-05-29T14:22:06.637Z] Starting GET request 
+[2026-05-29T14:22:06.643Z] User ID resolved {
+  "userId": 24
+}
+[2026-05-29T14:22:07.488Z] Tenant scope resolved {
+  "scope": {
+    "userId": 24,
+    "roleLevel": 1,
+    "roleName": "STUDENT",
+    "roleType": "PRODUCT",
+    "companyId": 8,
+    "branchId": 5,
+    "isScoped": true,
+    "selectionReason": "Branch Match for 5"
+  }
+}
+[2026-05-29T14:22:07.663Z] Resolving student record... 
+[2026-05-29T14:22:07.836Z] User ID mapping failed, trying email fallback... 
+[2026-05-29T14:22:08.020Z] Student record NOT found 
+[2026-05-29T14:23:55.831Z] Starting GET request 
+[2026-05-29T14:23:55.838Z] Starting GET request 
+[2026-05-29T14:23:55.842Z] User ID resolved {
+  "userId": 24
+}
+[2026-05-29T14:23:55.844Z] User ID resolved {
+  "userId": 24
+}
+[2026-05-29T14:23:56.265Z] Tenant scope resolved {
+  "scope": {
+    "userId": 24,
+    "roleLevel": 1,
+    "roleName": "STUDENT",
+    "roleType": "PRODUCT",
+    "companyId": 8,
+    "branchId": 5,
+    "isScoped": true,
+    "selectionReason": "Branch Match for 5"
+  }
+}
+[2026-05-29T14:23:56.276Z] Tenant scope resolved {
+  "scope": {
+    "userId": 24,
+    "roleLevel": 1,
+    "roleName": "STUDENT",
+    "roleType": "PRODUCT",
+    "companyId": 8,
+    "branchId": 5,
+    "isScoped": true,
+    "selectionReason": "Branch Match for 5"
+  }
+}
+[2026-05-29T14:23:56.453Z] Resolving student record... 
+[2026-05-29T14:23:56.456Z] Resolving student record... 
+[2026-05-29T14:23:56.620Z] User ID mapping failed, trying email fallback... 
+[2026-05-29T14:23:56.624Z] User ID mapping failed, trying email fallback... 
+[2026-05-29T14:23:56.775Z] Student record NOT found 
+[2026-05-29T14:23:56.797Z] Student record NOT found 
+[2026-05-29T14:24:56.428Z] Starting GET request 
+[2026-05-29T14:24:56.435Z] User ID resolved {
+  "userId": 24
+}
+[2026-05-29T14:24:56.544Z] Starting GET request 
+[2026-05-29T14:24:56.547Z] User ID resolved {
+  "userId": 24
+}
+[2026-05-29T14:24:57.085Z] Tenant scope resolved {
+  "scope": {
+    "userId": 24,
+    "roleLevel": 1,
+    "roleName": "STUDENT",
+    "roleType": "PRODUCT",
+    "companyId": 8,
+    "branchId": 5,
+    "isScoped": true,
+    "selectionReason": "Branch Match for 5"
+  }
+}
+[2026-05-29T14:24:57.092Z] Tenant scope resolved {
+  "scope": {
+    "userId": 24,
+    "roleLevel": 1,
+    "roleName": "STUDENT",
+    "roleType": "PRODUCT",
+    "companyId": 8,
+    "branchId": 5,
+    "isScoped": true,
+    "selectionReason": "Branch Match for 5"
+  }
+}
+[2026-05-29T14:24:57.305Z] Resolving student record... 
+[2026-05-29T14:24:57.311Z] Resolving student record... 
+[2026-05-29T14:24:57.495Z] User ID mapping failed, trying email fallback... 
+[2026-05-29T14:24:57.499Z] User ID mapping failed, trying email fallback... 
+[2026-05-29T14:24:57.693Z] Student record NOT found 
+[2026-05-29T14:24:57.702Z] Student record NOT found 
+[2026-05-29T14:25:05.355Z] Starting GET request 
+[2026-05-29T14:25:05.359Z] User ID resolved {
+  "userId": 24
+}
+[2026-05-29T14:25:05.378Z] Starting GET request 
+[2026-05-29T14:25:05.381Z] User ID resolved {
+  "userId": 24
+}
+[2026-05-29T14:25:05.775Z] Tenant scope resolved {
+  "scope": {
+    "userId": 24,
+    "roleLevel": 1,
+    "roleName": "STUDENT",
+    "roleType": "PRODUCT",
+    "companyId": 8,
+    "branchId": 5,
+    "isScoped": true,
+    "selectionReason": "Branch Match for 5"
+  }
+}
+[2026-05-29T14:25:05.781Z] Tenant scope resolved {
+  "scope": {
+    "userId": 24,
+    "roleLevel": 1,
+    "roleName": "STUDENT",
+    "roleType": "PRODUCT",
+    "companyId": 8,
+    "branchId": 5,
+    "isScoped": true,
+    "selectionReason": "Branch Match for 5"
+  }
+}
+[2026-05-29T14:25:05.962Z] Resolving student record... 
+[2026-05-29T14:25:05.981Z] Resolving student record... 
+[2026-05-29T14:25:06.194Z] User ID mapping failed, trying email fallback... 
+[2026-05-29T14:25:06.208Z] User ID mapping failed, trying email fallback... 
+[2026-05-29T14:25:06.402Z] Student record NOT found 
+[2026-05-29T14:25:06.426Z] Student record NOT found 
+[2026-05-29T19:05:52.557Z] Starting GET request 
+[2026-05-29T19:05:52.562Z] Starting GET request 
+[2026-05-29T19:05:52.566Z] User ID resolved {
+  "userId": 24
+}
+[2026-05-29T19:05:52.568Z] User ID resolved {
+  "userId": 24
+}
+[2026-05-29T19:05:53.036Z] Tenant scope resolved {
+  "scope": {
+    "userId": 24,
+    "roleLevel": 1,
+    "roleName": "STUDENT",
+    "roleType": "PRODUCT",
+    "companyId": 8,
+    "branchId": 5,
+    "isScoped": true,
+    "selectionReason": "Branch Match for 5"
+  }
+}
+[2026-05-29T19:05:53.040Z] Tenant scope resolved {
+  "scope": {
+    "userId": 24,
+    "roleLevel": 1,
+    "roleName": "STUDENT",
+    "roleType": "PRODUCT",
+    "companyId": 8,
+    "branchId": 5,
+    "isScoped": true,
+    "selectionReason": "Branch Match for 5"
+  }
+}
+[2026-05-29T19:05:53.208Z] Resolving student record... 
+[2026-05-29T19:05:53.211Z] Resolving student record... 
+[2026-05-29T19:05:53.357Z] User ID mapping failed, trying email fallback... 
+[2026-05-29T19:05:53.360Z] User ID mapping failed, trying email fallback... 
+[2026-05-29T19:05:53.537Z] Student record NOT found 
+[2026-05-29T19:05:53.542Z] Student record NOT found 
+[2026-06-06T18:37:22.468Z] Starting GET request 
+[2026-06-06T18:37:22.471Z] Starting GET request 
+[2026-06-06T18:37:22.473Z] User ID resolved {
+  "userId": 44
+}
+[2026-06-06T18:37:22.475Z] User ID resolved {
+  "userId": 44
+}
+[2026-06-06T18:37:22.644Z] Tenant scope resolved {
+  "scope": {
+    "userId": 44,
+    "roleLevel": 1,
+    "roleName": "STUDENT",
+    "roleType": "PRODUCT",
+    "companyId": 8,
+    "branchId": 5,
+    "isScoped": true,
+    "selectionReason": "Branch Match for 5",
+    "emsProfile": {
+      "profileType": "student",
+      "profileId": 165
+    }
+  }
+}
+[2026-06-06T18:37:22.850Z] Resolving student record... 
+[2026-06-06T18:37:22.856Z] Tenant scope resolved {
+  "scope": {
+    "userId": 44,
+    "roleLevel": 1,
+    "roleName": "STUDENT",
+    "roleType": "PRODUCT",
+    "companyId": 8,
+    "branchId": 5,
+    "isScoped": true,
+    "selectionReason": "Branch Match for 5",
+    "emsProfile": {
+      "profileType": "student",
+      "profileId": 165
+    }
+  }
+}
+[2026-06-06T18:37:22.927Z] Target Student Identified {
+  "studentId": 165,
+  "companyId": 8
+}
+[2026-06-06T18:37:22.928Z] Fetching enrollments... 
+[2026-06-06T18:37:23.293Z] Resolving student record... 
+[2026-06-06T18:37:23.295Z] Enrollments fetched {
+  "count": 1
+}
+[2026-06-06T18:37:23.296Z] Fetching assignments... 
+[2026-06-06T18:37:23.363Z] Target Student Identified {
+  "studentId": 165,
+  "companyId": 8
+}
+[2026-06-06T18:37:23.364Z] Fetching enrollments... 
+[2026-06-06T18:37:23.439Z] Enrollments fetched {
+  "count": 1
+}
+[2026-06-06T18:37:23.439Z] Fetching assignments... 
+[2026-06-06T18:37:23.474Z] Assignments fetched {
+  "count": 2
+}
+[2026-06-06T18:37:23.475Z] Fetching submissions... 
+[2026-06-06T18:37:23.549Z] Submissions processed 
+[2026-06-06T18:37:23.550Z] Fetching quizzes... 
+[2026-06-06T18:37:23.624Z] Assignments fetched {
+  "count": 2
+}
+[2026-06-06T18:37:23.624Z] Fetching submissions... 
+[2026-06-06T18:37:23.813Z] Submissions processed 
+[2026-06-06T18:37:23.814Z] Fetching quizzes... 
+[2026-06-06T18:37:23.816Z] Quizzes processed {
+  "count": 2
+}
+[2026-06-06T18:37:23.816Z] Fetching live classes... 
+[2026-06-06T18:37:24.009Z] Live classes fetched and mapped {
+  "count": 0
+}
+[2026-06-06T18:37:24.009Z] Fetching attendance... 
+[2026-06-06T18:37:24.055Z] Quizzes processed {
+  "count": 2
+}
+[2026-06-06T18:37:24.056Z] Fetching live classes... 
+[2026-06-06T18:37:24.238Z] Live classes fetched and mapped {
+  "count": 0
+}
+[2026-06-06T18:37:24.239Z] Fetching attendance... 
+[2026-06-06T18:37:24.465Z] Attendance sessions fetched {
+  "count": 0
+}
+[2026-06-06T18:37:24.466Z] Fetching recent materials... 
+[2026-06-06T18:37:24.642Z] Recent materials fetched {
+  "count": 0
+}
+[2026-06-06T18:37:24.643Z] Fetching available courses... 
+[2026-06-06T18:37:24.691Z] Attendance sessions fetched {
+  "count": 0
+}
+[2026-06-06T18:37:24.692Z] Fetching recent materials... 
+[2026-06-06T18:37:24.714Z] Available courses fetched {
+  "count": 5
+}
+[2026-06-06T18:37:24.715Z] Request complete, sending successResponse 
+[2026-06-06T18:37:24.892Z] Recent materials fetched {
+  "count": 0
+}
+[2026-06-06T18:37:24.892Z] Fetching available courses... 
+[2026-06-06T18:37:25.102Z] Available courses fetched {
+  "count": 5
+}
+[2026-06-06T18:37:25.102Z] Request complete, sending successResponse 
+[2026-06-06T18:38:05.049Z] Starting GET request 
+[2026-06-06T18:38:05.051Z] User ID resolved {
+  "userId": 44
+}
+[2026-06-06T18:38:05.082Z] Starting GET request 
+[2026-06-06T18:38:05.084Z] User ID resolved {
+  "userId": 44
+}
+[2026-06-06T18:38:05.454Z] Tenant scope resolved {
+  "scope": {
+    "userId": 44,
+    "roleLevel": 1,
+    "roleName": "STUDENT",
+    "roleType": "PRODUCT",
+    "companyId": 8,
+    "branchId": 5,
+    "isScoped": true,
+    "selectionReason": "Branch Match for 5",
+    "emsProfile": {
+      "profileType": "student",
+      "profileId": 165
+    }
+  }
+}
+[2026-06-06T18:38:05.658Z] Tenant scope resolved {
+  "scope": {
+    "userId": 44,
+    "roleLevel": 1,
+    "roleName": "STUDENT",
+    "roleType": "PRODUCT",
+    "companyId": 8,
+    "branchId": 5,
+    "isScoped": true,
+    "selectionReason": "Branch Match for 5",
+    "emsProfile": {
+      "profileType": "student",
+      "profileId": 165
+    }
+  }
+}
+[2026-06-06T18:38:05.665Z] Resolving student record... 
+[2026-06-06T18:38:05.732Z] Resolving student record... 
+[2026-06-06T18:38:05.862Z] Target Student Identified {
+  "studentId": 165,
+  "companyId": 8
+}
+[2026-06-06T18:38:05.863Z] Fetching enrollments... 
+[2026-06-06T18:38:05.864Z] Target Student Identified {
+  "studentId": 165,
+  "companyId": 8
+}
+[2026-06-06T18:38:05.865Z] Fetching enrollments... 
+[2026-06-06T18:38:05.963Z] Enrollments fetched {
+  "count": 1
+}
+[2026-06-06T18:38:05.963Z] Fetching assignments... 
+[2026-06-06T18:38:06.168Z] Assignments fetched {
+  "count": 2
+}
+[2026-06-06T18:38:06.169Z] Fetching submissions... 
+[2026-06-06T18:38:06.172Z] Enrollments fetched {
+  "count": 1
+}
+[2026-06-06T18:38:06.172Z] Fetching assignments... 
+[2026-06-06T18:38:06.343Z] Assignments fetched {
+  "count": 2
+}
+[2026-06-06T18:38:06.344Z] Fetching submissions... 
+[2026-06-06T18:38:06.353Z] Submissions processed 
+[2026-06-06T18:38:06.354Z] Fetching quizzes... 
+[2026-06-06T18:38:06.436Z] Submissions processed 
+[2026-06-06T18:38:06.437Z] Fetching quizzes... 
+[2026-06-06T18:38:06.538Z] Quizzes processed {
+  "count": 2
+}
+[2026-06-06T18:38:06.538Z] Fetching live classes... 
+[2026-06-06T18:38:06.628Z] Live classes fetched and mapped {
+  "count": 0
+}
+[2026-06-06T18:38:06.628Z] Fetching attendance... 
+[2026-06-06T18:38:06.816Z] Quizzes processed {
+  "count": 2
+}
+[2026-06-06T18:38:06.816Z] Fetching live classes... 
+[2026-06-06T18:38:06.928Z] Live classes fetched and mapped {
+  "count": 0
+}
+[2026-06-06T18:38:06.929Z] Fetching attendance... 
+[2026-06-06T18:38:07.028Z] Attendance sessions fetched {
+  "count": 0
+}
+[2026-06-06T18:38:07.029Z] Fetching recent materials... 
+[2026-06-06T18:38:07.117Z] Recent materials fetched {
+  "count": 0
+}
+[2026-06-06T18:38:07.118Z] Fetching available courses... 
+[2026-06-06T18:38:07.229Z] Attendance sessions fetched {
+  "count": 0
+}
+[2026-06-06T18:38:07.229Z] Fetching recent materials... 
+[2026-06-06T18:38:07.338Z] Recent materials fetched {
+  "count": 0
+}
+[2026-06-06T18:38:07.338Z] Fetching available courses... 
+[2026-06-06T18:38:07.340Z] Available courses fetched {
+  "count": 5
+}
+[2026-06-06T18:38:07.341Z] Request complete, sending successResponse 
+[2026-06-06T18:38:07.518Z] Available courses fetched {
+  "count": 5
+}
+[2026-06-06T18:38:07.519Z] Request complete, sending successResponse 
+[2026-06-06T18:38:27.932Z] Starting GET request 
+[2026-06-06T18:38:27.933Z] User ID resolved {
+  "userId": 44
+}
+[2026-06-06T18:38:27.964Z] Starting GET request 
+[2026-06-06T18:38:27.965Z] User ID resolved {
+  "userId": 44
+}
+[2026-06-06T18:38:28.287Z] Tenant scope resolved {
+  "scope": {
+    "userId": 44,
+    "roleLevel": 1,
+    "roleName": "STUDENT",
+    "roleType": "PRODUCT",
+    "companyId": 8,
+    "branchId": 5,
+    "isScoped": true,
+    "selectionReason": "Branch Match for 5",
+    "emsProfile": {
+      "profileType": "student",
+      "profileId": 165
+    }
+  }
+}
+[2026-06-06T18:38:28.389Z] Tenant scope resolved {
+  "scope": {
+    "userId": 44,
+    "roleLevel": 1,
+    "roleName": "STUDENT",
+    "roleType": "PRODUCT",
+    "companyId": 8,
+    "branchId": 5,
+    "isScoped": true,
+    "selectionReason": "Branch Match for 5",
+    "emsProfile": {
+      "profileType": "student",
+      "profileId": 165
+    }
+  }
+}
+[2026-06-06T18:38:28.397Z] Resolving student record... 
+[2026-06-06T18:38:28.497Z] Target Student Identified {
+  "studentId": 165,
+  "companyId": 8
+}
+[2026-06-06T18:38:28.502Z] Fetching enrollments... 
+[2026-06-06T18:38:28.503Z] Resolving student record... 
+[2026-06-06T18:38:28.599Z] Target Student Identified {
+  "studentId": 165,
+  "companyId": 8
+}
+[2026-06-06T18:38:28.599Z] Fetching enrollments... 
+[2026-06-06T18:38:28.601Z] Enrollments fetched {
+  "count": 1
+}
+[2026-06-06T18:38:28.601Z] Fetching assignments... 
+[2026-06-06T18:38:28.700Z] Assignments fetched {
+  "count": 2
+}
+[2026-06-06T18:38:28.701Z] Fetching submissions... 
+[2026-06-06T18:38:28.799Z] Submissions processed 
+[2026-06-06T18:38:28.800Z] Fetching quizzes... 
+[2026-06-06T18:38:28.806Z] Enrollments fetched {
+  "count": 1
+}
+[2026-06-06T18:38:28.806Z] Fetching assignments... 
+[2026-06-06T18:38:28.902Z] Assignments fetched {
+  "count": 2
+}
+[2026-06-06T18:38:28.903Z] Fetching submissions... 
+[2026-06-06T18:38:29.002Z] Submissions processed 
+[2026-06-06T18:38:29.003Z] Fetching quizzes... 
+[2026-06-06T18:38:29.208Z] Quizzes processed {
+  "count": 2
+}
+[2026-06-06T18:38:29.208Z] Fetching live classes... 
+[2026-06-06T18:38:29.278Z] Live classes fetched and mapped {
+  "count": 0
+}
+[2026-06-06T18:38:29.279Z] Fetching attendance... 
+[2026-06-06T18:38:29.388Z] Quizzes processed {
+  "count": 2
+}
+[2026-06-06T18:38:29.389Z] Fetching live classes... 
+[2026-06-06T18:38:29.470Z] Live classes fetched and mapped {
+  "count": 0
+}
+[2026-06-06T18:38:29.470Z] Fetching attendance... 
+[2026-06-06T18:38:29.510Z] Attendance sessions fetched {
+  "count": 0
+}
+[2026-06-06T18:38:29.511Z] Fetching recent materials... 
+[2026-06-06T18:38:29.583Z] Recent materials fetched {
+  "count": 0
+}
+[2026-06-06T18:38:29.584Z] Fetching available courses... 
+[2026-06-06T18:38:29.657Z] Available courses fetched {
+  "count": 5
+}
+[2026-06-06T18:38:29.658Z] Request complete, sending successResponse 
+[2026-06-06T18:38:29.817Z] Attendance sessions fetched {
+  "count": 0
+}
+[2026-06-06T18:38:29.818Z] Fetching recent materials... 
+[2026-06-06T18:38:29.886Z] Recent materials fetched {
+  "count": 0
+}
+[2026-06-06T18:38:29.887Z] Fetching available courses... 
+[2026-06-06T18:38:29.955Z] Available courses fetched {
+  "count": 5
+}
+[2026-06-06T18:38:29.956Z] Request complete, sending successResponse 
+[2026-06-06T18:38:57.386Z] Starting GET request 
+[2026-06-06T18:38:57.390Z] Starting GET request 
+[2026-06-06T18:38:57.393Z] User ID resolved {
+  "userId": 44
+}
+[2026-06-06T18:38:57.396Z] User ID resolved {
+  "userId": 44
+}
+[2026-06-06T18:38:57.787Z] Tenant scope resolved {
+  "scope": {
+    "userId": 44,
+    "roleLevel": 1,
+    "roleName": "STUDENT",
+    "roleType": "PRODUCT",
+    "companyId": 8,
+    "branchId": 5,
+    "isScoped": true,
+    "selectionReason": "Branch Match for 5",
+    "emsProfile": {
+      "profileType": "student",
+      "profileId": 165
+    }
+  }
+}
+[2026-06-06T18:38:58.058Z] Tenant scope resolved {
+  "scope": {
+    "userId": 44,
+    "roleLevel": 1,
+    "roleName": "STUDENT",
+    "roleType": "PRODUCT",
+    "companyId": 8,
+    "branchId": 5,
+    "isScoped": true,
+    "selectionReason": "Branch Match for 5",
+    "emsProfile": {
+      "profileType": "student",
+      "profileId": 165
+    }
+  }
+}
+[2026-06-06T18:38:58.117Z] Resolving student record... 
+[2026-06-06T18:38:58.138Z] Resolving student record... 
+[2026-06-06T18:38:58.293Z] Target Student Identified {
+  "studentId": 165,
+  "companyId": 8
+}
+[2026-06-06T18:38:58.294Z] Fetching enrollments... 
+[2026-06-06T18:38:58.304Z] Target Student Identified {
+  "studentId": 165,
+  "companyId": 8
+}
+[2026-06-06T18:38:58.305Z] Fetching enrollments... 
+[2026-06-06T18:38:58.378Z] Enrollments fetched {
+  "count": 1
+}
+[2026-06-06T18:38:58.379Z] Fetching assignments... 
+[2026-06-06T18:38:58.502Z] Assignments fetched {
+  "count": 2
+}
+[2026-06-06T18:38:58.503Z] Fetching submissions... 
+[2026-06-06T18:38:58.509Z] Enrollments fetched {
+  "count": 1
+}
+[2026-06-06T18:38:58.509Z] Fetching assignments... 
+[2026-06-06T18:38:58.600Z] Assignments fetched {
+  "count": 2
+}
+[2026-06-06T18:38:58.601Z] Fetching submissions... 
+[2026-06-06T18:38:58.699Z] Submissions processed 
+[2026-06-06T18:38:58.699Z] Fetching quizzes... 
+[2026-06-06T18:38:58.703Z] Submissions processed 
+[2026-06-06T18:38:58.704Z] Fetching quizzes... 
+[2026-06-06T18:38:58.903Z] Quizzes processed {
+  "count": 2
+}
+[2026-06-06T18:38:58.904Z] Fetching live classes... 
+[2026-06-06T18:38:59.006Z] Quizzes processed {
+  "count": 2
+}
+[2026-06-06T18:38:59.006Z] Fetching live classes... 
+[2026-06-06T18:38:59.009Z] Live classes fetched and mapped {
+  "count": 0
+}
+[2026-06-06T18:38:59.009Z] Fetching attendance... 
+[2026-06-06T18:38:59.210Z] Live classes fetched and mapped {
+  "count": 0
+}
+[2026-06-06T18:38:59.211Z] Fetching attendance... 
+[2026-06-06T18:38:59.573Z] Attendance sessions fetched {
+  "count": 0
+}
+[2026-06-06T18:38:59.573Z] Fetching recent materials... 
+[2026-06-06T18:38:59.596Z] Attendance sessions fetched {
+  "count": 0
+}
+[2026-06-06T18:38:59.596Z] Fetching recent materials... 
+[2026-06-06T18:38:59.646Z] Recent materials fetched {
+  "count": 0
+}
+[2026-06-06T18:38:59.646Z] Fetching available courses... 
+[2026-06-06T18:38:59.657Z] Recent materials fetched {
+  "count": 0
+}
+[2026-06-06T18:38:59.658Z] Fetching available courses... 
+[2026-06-06T18:38:59.731Z] Available courses fetched {
+  "count": 5
+}
+[2026-06-06T18:38:59.732Z] Request complete, sending successResponse 
+[2026-06-06T18:38:59.824Z] Available courses fetched {
+  "count": 5
+}
+[2026-06-06T18:38:59.825Z] Request complete, sending successResponse 
+[2026-06-06T18:40:42.204Z] Starting GET request 
+[2026-06-06T18:40:42.206Z] User ID resolved {
+  "userId": 44
+}
+[2026-06-06T18:40:42.223Z] Starting GET request 
+[2026-06-06T18:40:42.225Z] User ID resolved {
+  "userId": 44
+}
+[2026-06-06T18:40:42.634Z] Tenant scope resolved {
+  "scope": {
+    "userId": 44,
+    "roleLevel": 1,
+    "roleName": "STUDENT",
+    "roleType": "PRODUCT",
+    "companyId": 8,
+    "branchId": 5,
+    "isScoped": true,
+    "selectionReason": "Branch Match for 5",
+    "emsProfile": {
+      "profileType": "student",
+      "profileId": 165
+    }
+  }
+}
+[2026-06-06T18:40:42.738Z] Tenant scope resolved {
+  "scope": {
+    "userId": 44,
+    "roleLevel": 1,
+    "roleName": "STUDENT",
+    "roleType": "PRODUCT",
+    "companyId": 8,
+    "branchId": 5,
+    "isScoped": true,
+    "selectionReason": "Branch Match for 5",
+    "emsProfile": {
+      "profileType": "student",
+      "profileId": 165
+    }
+  }
+}
+[2026-06-06T18:40:42.946Z] Resolving student record... 
+[2026-06-06T18:40:42.948Z] Resolving student record... 
+[2026-06-06T18:40:43.152Z] Target Student Identified {
+  "studentId": 165,
+  "companyId": 8
+}
+[2026-06-06T18:40:43.153Z] Fetching enrollments... 
+[2026-06-06T18:40:43.156Z] Target Student Identified {
+  "studentId": 165,
+  "companyId": 8
+}
+[2026-06-06T18:40:43.157Z] Fetching enrollments... 
+[2026-06-06T18:40:43.249Z] Enrollments fetched {
+  "count": 1
+}
+[2026-06-06T18:40:43.249Z] Fetching assignments... 
+[2026-06-06T18:40:43.352Z] Assignments fetched {
+  "count": 2
+}
+[2026-06-06T18:40:43.353Z] Fetching submissions... 
+[2026-06-06T18:40:43.357Z] Enrollments fetched {
+  "count": 1
+}
+[2026-06-06T18:40:43.357Z] Fetching assignments... 
+[2026-06-06T18:40:43.453Z] Assignments fetched {
+  "count": 2
+}
+[2026-06-06T18:40:43.453Z] Fetching submissions... 
+[2026-06-06T18:40:43.555Z] Submissions processed 
+[2026-06-06T18:40:43.555Z] Fetching quizzes... 
+[2026-06-06T18:40:43.556Z] Submissions processed 
+[2026-06-06T18:40:43.557Z] Fetching quizzes... 
+[2026-06-06T18:40:43.863Z] Quizzes processed {
+  "count": 2
+}
+[2026-06-06T18:40:43.863Z] Fetching live classes... 
+[2026-06-06T18:40:43.866Z] Quizzes processed {
+  "count": 2
+}
+[2026-06-06T18:40:43.866Z] Fetching live classes... 
+[2026-06-06T18:40:43.961Z] Live classes fetched and mapped {
+  "count": 0
+}
+[2026-06-06T18:40:43.962Z] Fetching attendance... 
+[2026-06-06T18:40:44.064Z] Live classes fetched and mapped {
+  "count": 0
+}
+[2026-06-06T18:40:44.064Z] Fetching attendance... 
+[2026-06-06T18:40:44.377Z] Attendance sessions fetched {
+  "count": 0
+}
+[2026-06-06T18:40:44.378Z] Fetching recent materials... 
+[2026-06-06T18:40:44.390Z] Attendance sessions fetched {
+  "count": 0
+}
+[2026-06-06T18:40:44.391Z] Fetching recent materials... 
+[2026-06-06T18:40:44.457Z] Recent materials fetched {
+  "count": 0
+}
+[2026-06-06T18:40:44.458Z] Fetching available courses... 
+[2026-06-06T18:40:44.558Z] Recent materials fetched {
+  "count": 0
+}
+[2026-06-06T18:40:44.558Z] Fetching available courses... 
+[2026-06-06T18:40:44.624Z] Available courses fetched {
+  "count": 5
+}
+[2026-06-06T18:40:44.624Z] Request complete, sending successResponse 
+[2026-06-06T18:40:44.682Z] Available courses fetched {
+  "count": 5
+}
+[2026-06-06T18:40:44.682Z] Request complete, sending successResponse 
