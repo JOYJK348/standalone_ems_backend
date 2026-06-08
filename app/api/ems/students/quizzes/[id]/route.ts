@@ -45,10 +45,6 @@ export async function GET(
         // Get quiz basic details (without questions/answers yet)
         const quiz = await QuizService.getQuizById(quizId, scope.companyId!);
 
-        const fs = require('fs');
-        const logFile = 'e:\\ERP\\CLONE\\foundation_durkkas\\backend\\DETAIL_FETCH_LOG.txt';
-        fs.appendFileSync(logFile, `[${new Date().toISOString()}] FETCH DETAIL Quiz ${quizId}\n`);
-
         // Check if student has an active or completed attempt
         const { data: attempt } = await ems.quizAttempts()
             .select(`

@@ -51,8 +51,6 @@ export async function POST(
     req: NextRequest,
     context: { params: Promise<{ id: string }> }
 ) {
-    const fs = require('fs');
-    const logFile = 'e:\\ERP\\CLONE\\foundation_durkkas\\backend\\SAVE_DEBUG_FINAL.txt';
     try {
         const userId = await getUserIdFromToken(req);
         const { id } = await context.params;
@@ -60,17 +58,12 @@ export async function POST(
         const scope = await getUserTenantScope(userId);
         const { questions } = await req.json();
 
-        fs.appendFileSync(logFile, `\n[${new Date().toISOString()}] HIT POST: Quiz ${quizId}, Company ${scope.companyId}, Questions ${questions?.length}\n`);
-
         if (!questions || !Array.isArray(questions)) {
-            fs.appendFileSync(logFile, `ERROR: Invalid payload\n`);
             return errorResponse(null, 'Invalid questions data', 400);
         }
 
-        // 1. Delete
         await ems.quizQuestions().delete().eq('quiz_id', quizId).eq('company_id', scope.companyId!);
 
-        // 2. Insert
         for (const q of questions) {
             const { data: question, error: qErr } = await ems.quizQuestions().insert({
                 quiz_id: quizId,
@@ -82,7 +75,6 @@ export async function POST(
             }).select().single();
 
             if (qErr) {
-                fs.appendFileSync(logFile, `Q ERR: ${qErr.message}\n`);
                 continue;
             }
 
@@ -93,19 +85,15 @@ export async function POST(
                     is_correct: !!o.is_correct,
                     option_order: o.option_order || (idx + 1)
                 }));
-                const { error: oErr } = await ems.quizOptions().insert(opts);
-                if (oErr) fs.appendFileSync(logFile, `OPT ERR for Q ${question.id}: ${oErr.message}\n`);
+                await ems.quizOptions().insert(opts);
             }
         }
 
-        // 3. Update count
         await ems.quizzes().update({ total_questions: questions.length } as any).eq('id', quizId);
 
-        fs.appendFileSync(logFile, `SUCCESS\n`);
         return successResponse({ quiz_id: quizId }, 'Saved');
 
     } catch (error: any) {
-        fs.appendFileSync(logFile, `GLOBAL ERROR: ${error.message}\n`);
         return errorResponse(null, error.message);
     }
 }

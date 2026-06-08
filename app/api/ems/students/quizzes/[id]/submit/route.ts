@@ -14,13 +14,9 @@ export async function POST(
     req: NextRequest,
     context: { params: any }
 ) {
-    const fs = require('fs');
-    const logFile = 'e:\\ERP\\CLONE\\foundation_durkkas\\backend\\SUBMIT_REACHED.txt';
     try {
-        fs.appendFileSync(logFile, `[${new Date().toISOString()}] SUBMIT REQUEST START\n`);
         const userId = await getUserIdFromToken(req);
         if (!userId) {
-            fs.appendFileSync(logFile, `ERROR: Unauthorized\n`);
             return errorResponse(null, 'Unauthorized', 401);
         }
 
@@ -61,7 +57,6 @@ export async function POST(
             .single();
 
         // Update attempt status
-        fs.appendFileSync(logFile, `Updating attempt ${attempt_id} status\n`);
         const { error: updateError } = await ems.quizAttempts()
             .update({
                 completed_at: new Date().toISOString(),
@@ -71,13 +66,11 @@ export async function POST(
             .eq('student_id', student.id);
 
         if (updateError) {
-            fs.appendFileSync(logFile, `Attempt status update failed: ${updateError.message}\n`);
             console.error('[Quiz Submit] Attempt status update failed:', updateError);
             throw updateError;
         }
 
         // Save answers to quiz_responses
-        fs.appendFileSync(logFile, `Saving ${Object.keys(answers || {}).length} responses\n`);
         if (answers && typeof answers === 'object') {
             const responsesToInsert = Object.entries(answers).map(([qId, responseText]) => ({
                 attempt_id: attempt_id,
@@ -93,7 +86,6 @@ export async function POST(
                     .insert(responsesToInsert);
 
                 if (responseError) {
-                    fs.appendFileSync(logFile, `Failed to save responses: ${responseError.message}\n`);
                     console.error('[Quiz Submit] Failed to save quiz responses:', responseError);
                     throw responseError;
                 }
@@ -101,17 +93,13 @@ export async function POST(
         }
 
         // Auto-grade the attempt
-        fs.appendFileSync(logFile, `Starting auto-grading for attempt ${attempt_id}\n`);
         const gradedAttempt = await QuizService.autoGradeAttempt(attempt_id);
-        fs.appendFileSync(logFile, `Graded: ${gradedAttempt.marks_obtained}/${gradedAttempt.total_marks}\n`);
 
         // Calculate if passed
         const marksObtained = Number(gradedAttempt.marks_obtained || 0);
         const totalMarks = Number(gradedAttempt.total_marks || quiz?.total_marks || 1);
         const percentage = totalMarks > 0 ? Math.round((marksObtained / totalMarks) * 100) : 0;
         const isPassed = marksObtained >= (quiz?.passing_marks || 0);
-
-        fs.appendFileSync(logFile, `Calculated results: ${percentage}%, Passed: ${isPassed}\n`);
 
         // Final update with percentage and pass status
         const { data: finalAttempt, error: finalError } = await ems.quizAttempts()
@@ -124,21 +112,16 @@ export async function POST(
             .single();
 
         if (finalError) {
-            fs.appendFileSync(logFile, `Final update failed: ${finalError.message}\n`);
             console.error('[Quiz Submit] Final update failed:', finalError);
             throw finalError;
         }
 
-        fs.appendFileSync(logFile, `SUCCESS for attempt ${attempt_id}\n`);
         return successResponse({
             ...finalAttempt,
-            score: finalAttempt.marks_obtained // Map for frontend convenience
+            score: finalAttempt.marks_obtained
         }, 'Quiz submitted and graded successfully');
 
     } catch (error: any) {
-        const fs = require('fs');
-        const logFile = 'e:\\ERP\\CLONE\\foundation_durkkas\\backend\\SUBMIT_ERROR_LOG.txt';
-        fs.appendFileSync(logFile, `[${new Date().toISOString()}] SUBMIT ERROR: ${error.message}\nStack: ${error.stack}\n`);
         console.error('Submit Student Quiz Error:', error);
         return errorResponse(null, error.message || 'Failed to submit quiz');
     }

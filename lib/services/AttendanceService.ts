@@ -94,20 +94,12 @@ export class AttendanceService {
 
             if (error) {
                 logToFile('Create Session Error:', error);
-                try {
-                    const fs = require('fs');
-                    fs.appendFileSync('backend/session_error.log', `[${new Date().toISOString()}] Create Session Error: ${JSON.stringify(error, null, 2)}\nPayload: ${JSON.stringify(insertPayload, null, 2)}\n`);
-                } catch (e) { }
                 throw error;
             }
             logToFile('Session Created Successfully:', data);
             return data;
         } catch (err: any) {
             logToFile('createSession Catch Error:', { message: err.message, stack: err.stack });
-            try {
-                const fs = require('fs');
-                fs.appendFileSync('backend/session_error.log', `[${new Date().toISOString()}] Catch Error: ${err.message}\nStack: ${err.stack}\n`);
-            } catch (e) { }
             throw err;
         }
     }

@@ -55,12 +55,7 @@ export async function GET(
         // Get questions using service
         const questionsData = await QuizService.getQuestions(quizId);
 
-        const fs = require('fs');
-        const logFile = 'e:\\ERP\\CLONE\\foundation_durkkas\\backend\\quiz_fetch_log.txt';
-        fs.appendFileSync(logFile, `\n[${new Date().toISOString()}] FETCH Quiz ${quizId} - Found from DB: ${questionsData?.length}\n`);
-
         if (!questionsData || questionsData.length === 0) {
-            fs.appendFileSync(logFile, `WARN: No questions found in DB for quiz ${quizId}\n`);
             return successResponse([], 'No questions found for this quiz');
         }
 
